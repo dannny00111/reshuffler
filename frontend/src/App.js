@@ -250,7 +250,7 @@ Generate JSON with these fields:
       const segmentDuration = videoDuration / segmentCount;
       
       console.log(`📐 Video info: ${videoDuration}s total, ${segmentCount} segments of ${segmentDuration}s each`);
-      setProcessingStep(`✂️ Creating ${segmentCount} segments for reshuffling...`);
+      updateProcessingStep(`✂️ Creating ${segmentCount} segments for reshuffling...`);
       
       // Create segment list based on platform strategy
       let segmentOrder = [];
