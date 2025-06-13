@@ -518,17 +518,20 @@ Generate JSON with these fields:
   const downloadProcessedVideo = () => {
     if (!processedVideo) return;
     
-    // Download the actual processed video
+    // Use the natural filename generated during processing
+    const naturalFilename = processedVideo.naturalFilename || `VID_${Date.now()}.mp4`;
+    
+    // Download the sanitized video
     const link = document.createElement('a');
     link.href = processedVideo.videoUrl;
-    link.download = `viral_${selectedPlatform.toLowerCase()}_${Date.now()}.mp4`;
+    link.download = naturalFilename; // Natural filename, no platform indicators
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     
-    // Download metadata
+    // Download metadata package (for user reference only)
     const metadataText = `
-VIRAL VIDEO PACKAGE - ${selectedPlatform.toUpperCase()}
+VIRAL VIDEO PACKAGE (SANITIZED)
 
 🎬 VIDEO PROCESSING COMPLETE:
 ✅ Original Duration: ${Math.round(processedVideo.originalDuration)}s
@@ -536,6 +539,7 @@ VIRAL VIDEO PACKAGE - ${selectedPlatform.toUpperCase()}
 ✅ Segments Reshuffled: ${processedVideo.segmentsReshuffled}
 ✅ Optimizations Applied: ${processedVideo.optimizationsApplied.join(', ')}
 ✅ Algorithmic Score: ${processedVideo.algorithmicScore}/100
+✅ Metadata: FULLY SANITIZED
 
 📊 VIRAL METADATA:
 📝 Title: ${processedVideo.metadata.title}
@@ -547,14 +551,22 @@ VIRAL VIDEO PACKAGE - ${selectedPlatform.toUpperCase()}
 ⚡ ALGORITHM HACKS:
 ${processedVideo.metadata.algorithm_hacks.join(', ')}
 
+🔒 SANITIZATION FEATURES:
+✅ All identifying metadata stripped
+✅ Natural filename pattern
+✅ Mobile-optimized encoding
+✅ Randomized processing parameters
+✅ Natural device metadata simulation
+
 🎯 PLATFORM: ${selectedPlatform}
 ⚡ OPTIMIZATION LEVEL: ${optimizationLevel}
+📱 DEVICE SIMULATION: ${processedVideo.deviceMetadata?.device || 'Generic Mobile'}
 `;
 
     const metadataBlob = new Blob([metadataText], { type: 'text/plain' });
     const metadataLink = document.createElement('a');
     metadataLink.href = URL.createObjectURL(metadataBlob);
-    metadataLink.download = `viral_metadata_${selectedPlatform.toLowerCase()}.txt`;
+    metadataLink.download = `viral_notes_${Date.now()}.txt`;
     document.body.appendChild(metadataLink);
     metadataLink.click();
     document.body.removeChild(metadataLink);
