@@ -1,0 +1,57 @@
+🚀 Starting AyoRecuts Development Environment...
+========================================
+🔍 Checking dependencies...
+✅ All required dependencies are available
+🐍 Setting up Python virtual environment...
+✅ Virtual environment activated
+📦 Installing backend dependencies...
+error: externally-managed-environment
+
+× This environment is externally managed
+╰─> To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+    
+    If you wish to install a non-Debian-packaged Python package,
+    create a virtual environment using python3 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+    sure you have python3-full installed.
+    
+    If you wish to install a non-Debian packaged Python application,
+    it may be easiest to use pipx install xyz, which will manage a
+    virtual environment for you. Make sure you have pipx installed.
+    
+    See /usr/share/doc/python3.12/README.venv for more information.
+
+note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+hint: See PEP 668 for the detailed specification.
+✅ Backend dependencies installed
+🌐 Setting up frontend...
+🧹 Cleaning up existing processes...
+🔧 Starting backend server...
+⏱️  Waiting for backend to start...
+✅ Backend server started successfully on http://localhost:8000
+✅ Backend API is responding correctly
+🎨 Starting frontend server...
+⏱️  Waiting for frontend to start...
+✅ Frontend server started successfully on http://localhost:3000
+
+🎉 AyoRecuts Development Environment Started!
+========================================
+🔗 Frontend: http://localhost:3000
+🔗 Backend API: http://localhost:8000/api/
+📊 Backend Docs: http://localhost:8000/docs
+
+📝 Process IDs:
+   Backend PID: 6967
+   Frontend PID: 6978
+
+📋 To stop the servers:
+   kill 6967 6978
+   or run: ./stop_dev.sh
+
+📄 Logs:
+   Backend: backend.log
+   Frontend: frontend.log
+
+✨ Ready to develop! Open http://localhost:3000 in your browser.
