@@ -233,7 +233,7 @@ Generate JSON with these fields:
     const strategy = platformStrategies[selectedPlatform];
     
     console.log('🎬 Starting video processing with strategy:', strategy);
-    setProcessingStep('📁 Preparing video for processing...');
+    updateProcessingStep('📁 Preparing video for processing...');
     
     try {
       // Write input file
