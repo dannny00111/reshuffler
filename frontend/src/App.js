@@ -25,6 +25,7 @@ function App() {
   const ffmpegRef = useRef(new FFmpeg());
   const [ffmpegLoaded, setFFmpegLoaded] = useState(false);
   const backgroundManagerRef = useRef(null);
+  const metadataSanitizerRef = useRef(new MetadataSanitizer());
 
   // Initialize Background Processing Manager
   useEffect(() => {
