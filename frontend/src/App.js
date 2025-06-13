@@ -707,17 +707,21 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
           </div>
         </div>
 
-        {/* Upload Area */}
+        {/* Professional Upload Area */}
         <div 
-          className="border-2 border-dashed border-purple-400 rounded-lg p-8 text-center mb-6 bg-black/20 backdrop-blur-sm hover:border-purple-300 transition-all"
+          className="upload-area p-12 text-center mb-8 animate-on-scroll card-hover"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
           {!videoUrl ? (
             <div>
-              <div className="text-6xl mb-4 animate-bounce">🎬</div>
-              <p className="text-white text-2xl mb-2">Drop video for REAL processing</p>
-              <p className="text-purple-300 text-lg mb-6">FFmpeg will actually reshuffle your video segments</p>
+              <div className="text-8xl mb-6">🎬</div>
+              <h2 className="text-white text-3xl font-bold mb-4 text-glow">
+                Drop Video for Professional Processing
+              </h2>
+              <p className="text-professional text-xl mb-8 max-w-2xl mx-auto">
+                Advanced FFmpeg engine will intelligently reshuffle your video segments for maximum viral potential
+              </p>
               <input
                 type="file"
                 accept="video/*"
@@ -727,54 +731,56 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               />
               <label 
                 htmlFor="video-upload"
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-10 py-4 rounded-lg cursor-pointer hover:from-purple-700 hover:to-blue-700 transition-all inline-block font-bold text-xl"
+                className="btn-primary text-white px-12 py-5 rounded-xl cursor-pointer inline-block font-bold text-xl transition-all duration-300 hover:scale-105"
               >
-                Select Video File
+                Select Professional Video
               </label>
             </div>
           ) : (
-            <div>
+            <div className="space-y-6">
               <video 
                 ref={videoRef}
                 src={videoUrl}
                 onLoadedMetadata={onVideoLoaded}
                 controls
-                className="max-w-full max-h-80 mx-auto rounded-lg mb-4 shadow-2xl"
+                className="max-w-full max-h-96 mx-auto rounded-xl shadow-2xl border-2 border-yellow-400/30"
               />
-              <div className="text-purple-200 mb-6 text-lg">
+              <div className="text-professional text-xl font-semibold">
                 📹 Original: {Math.round(videoDuration)}s → Target: {platformStrategies[selectedPlatform].optimalDuration}s | Platform: {selectedPlatform}
               </div>
               <button
                 onClick={optimizeVideo}
                 disabled={isProcessing || !ffmpegLoaded}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-10 py-4 rounded-lg font-bold text-xl disabled:opacity-50 hover:from-green-600 hover:to-emerald-700 transition-all transform hover:scale-105"
+                className="btn-accent text-white px-12 py-5 rounded-xl font-bold text-xl disabled:opacity-50 transition-all duration-300 hover:scale-105"
               >
-                {isProcessing ? '✂️ Processing Video...' : '🚀 RESHUFFLE VIDEO'}
+                {isProcessing ? '✂️ Processing Video...' : '🚀 OPTIMIZE VIDEO'}
               </button>
             </div>
           )}
         </div>
 
-        {/* Processing Status */}
+        {/* Advanced Processing Status */}
         {isProcessing && (
-          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-6 mb-6 text-center border border-purple-500/30">
-            <div className="text-white text-xl mb-4">{processingStep}</div>
-            <div className="w-full bg-gray-700 rounded-full h-4 mb-2">
+          <div className="processing-status p-8 mb-8 text-center animate-on-scroll">
+            <div className="text-white text-2xl font-bold mb-6 text-glow">{processingStep}</div>
+            <div className="progress-bar w-full h-6 rounded-full mb-4 relative overflow-hidden">
               <div 
-                className="bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 h-4 rounded-full transition-all duration-500" 
+                className="progress-bar-fill transition-all duration-500" 
                 style={{width: `${processingProgress}%`}}
               ></div>
             </div>
-            <div className="text-purple-300 mb-4">Progress: {processingProgress}% - FFmpeg is actually reshuffling your video! ✂️</div>
+            <div className="text-professional text-lg mb-6">
+              Progress: {processingProgress}% - Advanced FFmpeg processing in action! ✂️
+            </div>
             
             {backgroundProcessingEnabled && (
-              <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                <div className="text-blue-300 text-sm flex items-center justify-center gap-2">
-                  <span className="animate-pulse">📱</span>
-                  <span>You can switch to other tabs/apps - processing continues in background!</span>
+              <div className="glass p-6 rounded-xl max-w-md mx-auto">
+                <div className="text-blue-300 font-semibold flex items-center justify-center gap-3">
+                  <div className="spinner w-6 h-6"></div>
+                  <span>Background processing active - switch apps freely!</span>
                 </div>
-                <div className="text-blue-200 text-xs mt-1">
-                  You'll get notifications about progress and completion
+                <div className="text-blue-200 text-sm mt-2">
+                  You'll receive notifications about progress and completion
                 </div>
               </div>
             )}
