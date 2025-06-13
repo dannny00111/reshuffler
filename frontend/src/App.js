@@ -786,11 +786,11 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Video Preview */}
               <div className="glass-elevated p-6 rounded-lg">
-                <h3 className="text-xl font-bold text-primary mb-4">🎬 Processed Video</h3>
+                <h3 className="text-xl font-bold mb-4">🎬 Processed Video</h3>
                 <video 
                   src={processedVideo.videoUrl}
                   controls
-                  className="w-full rounded-lg mb-4 border border-tan-medium"
+                  className="w-full rounded-lg mb-4 border border-border-color"
                 />
                 <div className="space-y-2">
                   <div className="flex justify-between items-center text-body">
@@ -811,40 +811,38 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                   </div>
                   <div className="flex justify-between items-center text-body">
                     <span>🔒 Metadata:</span>
-                    <span className="text-success">Sanitized</span>
+                    <span className="text-green-600">Sanitized</span>
                   </div>
                 </div>
               </div>
 
               {/* Analytics */}
               <div className="glass-elevated p-6 rounded-lg">
-                <h3 className="text-xl font-bold text-primary mb-4">📊 Analytics</h3>
+                <h3 className="text-xl font-bold mb-4">📊 Analytics</h3>
                 <div className="space-y-6">
                   <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-body">Algorithm Score:</span>
-                      <span className="text-success font-bold">{processedVideo.algorithmicScore}/100</span>
-                    </div>
-                    <ProgressBar progress={processedVideo.algorithmicScore} label="Algorithm Score" />
+                    <ProgressBar 
+                      progress={processedVideo.algorithmicScore} 
+                      label={`Algorithm Score: ${processedVideo.algorithmicScore}/100`} 
+                    />
                   </div>
                   
                   <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-body">Viral Potential:</span>
-                      <span className="text-success font-bold">{processedVideo.metadata.viral_score_prediction}%</span>
-                    </div>
-                    <ProgressBar progress={processedVideo.metadata.viral_score_prediction} label="Viral Score" />
+                    <ProgressBar 
+                      progress={processedVideo.metadata.viral_score_prediction} 
+                      label={`Viral Potential: ${processedVideo.metadata.viral_score_prediction}%`} 
+                    />
                   </div>
                   
-                  <div className="glass-surface p-4 rounded-lg">
-                    <h4 className="text-lg font-semibold text-primary mb-2">🏷️ Hashtags</h4>
-                    <p className="text-accent">
+                  <div className="glass-dark p-4 rounded-xl">
+                    <h4 className="text-lg font-semibold mb-2">🏷️ Hashtags</h4>
+                    <p className="text-accent-primary">
                       {processedVideo.metadata.hashtags.map(tag => '#' + tag).join(' ')}
                     </p>
                   </div>
                   
-                  <div className="glass-surface p-4 rounded-lg">
-                    <h4 className="text-lg font-semibold text-primary mb-2">🪝 Hook</h4>
+                  <div className="glass-dark p-4 rounded-xl">
+                    <h4 className="text-lg font-semibold mb-2">🪝 Hook</h4>
                     <p className="text-body italic">
                       "{processedVideo.metadata.hooks[0]}"
                     </p>
@@ -861,8 +859,8 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               >
                 📥 Download Optimized Video
               </button>
-              <p className="text-body mt-2">
-                Includes optimized video file and metadata package
+              <p className="text-muted mt-2">
+                Includes: Optimized video file + viral metadata package
               </p>
             </div>
           </div>
