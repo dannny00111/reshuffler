@@ -591,9 +591,13 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
       
       {/* Floating Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <Analytics />
         <div className="floating-orb"></div>
+    <Analytics />
         <div className="floating-orb"></div>
+    <Analytics />
         <div className="floating-orb"></div>
+    <Analytics />
       </div>
 
       {/* Modern Header */}
@@ -625,6 +629,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               🧠 Score: {algorithmicScore}/100
             </StatusBadge>
           )}
+    <Analytics />
         </div>
       </header>
 
@@ -647,6 +652,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                 <option value="YouTube">🎬 YouTube (60s, 9:16, Retention)</option>
                 <option value="Twitter">🐦 Twitter (10s, 16:9, Quick-Punch)</option>
               </select>
+    <Analytics />
             </div>
             
             {/* Optimization Level */}
@@ -663,6 +669,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                 <option value="balanced">⚖️ Balanced Processing</option>
                 <option value="aggressive">🚀 Aggressive Optimization</option>
               </select>
+    <Analytics />
             </div>
             
             {/* Features Overview */}
@@ -686,9 +693,13 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                     Background Mode
                   </FeatureBadge>
                 )}
+    <Analytics />
               </div>
+    <Analytics />
             </div>
+    <Analytics />
           </div>
+    <Analytics />
         </div>
 
         {/* Upload Area */}
@@ -700,6 +711,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
         >
           {!videoUrl ? (
             <div className="animate-on-scroll">
+    <Analytics />
               <div className="dropzone-icon">🎬</div>
               <h2 className="text-2xl font-bold text-primary mb-4">
                 Drop Video for Professional Processing
@@ -720,6 +732,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               >
                 Select Video File
               </label>
+    <Analytics />
             </div>
           ) : (
             <div className="space-y-6 w-full">
@@ -748,8 +761,11 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                   >
                     {isProcessing ? '✂️ Processing...' : '🚀 Optimize Video'}
                   </button>
+    <Analytics />
                 </div>
+    <Analytics />
               </div>
+    <Analytics />
             </div>
           )}
         </Dropzone>
@@ -763,11 +779,15 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
             {backgroundProcessingEnabled && (
               <div className="mt-6 p-4 glass-elevated rounded-lg">
                 <div className="flex items-center gap-3 text-center justify-center">
+    <Analytics />
                   <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
                   <span className="text-body">Background processing active - switch apps freely!</span>
+    <Analytics />
                 </div>
+    <Analytics />
               </div>
             )}
+    <Analytics />
           </div>
         )}
 
@@ -781,6 +801,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               <p className="text-body">
                 Processed and optimized for {selectedPlatform}
               </p>
+    <Analytics />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -796,24 +817,31 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                   <div className="flex justify-between items-center text-body">
                     <span>📹 Duration:</span>
                     <span>{Math.round(processedVideo.originalDuration)}s → {Math.round(processedVideo.newDuration)}s</span>
+    <Analytics />
                   </div>
                   <div className="flex justify-between items-center text-body">
                     <span>✂️ Segments:</span>
                     <span>{processedVideo.segmentsReshuffled}</span>
+    <Analytics />
                   </div>
                   <div className="flex justify-between items-center text-body">
                     <span>🎨 Effects:</span>
                     <span className="text-sm">{processedVideo.optimizationsApplied.join(', ')}</span>
+    <Analytics />
                   </div>
                   <div className="flex justify-between items-center text-body">
                     <span>🎯 Platform:</span>
                     <span>{processedVideo.platform}</span>
+    <Analytics />
                   </div>
                   <div className="flex justify-between items-center text-body">
                     <span>🔒 Metadata:</span>
                     <span className="text-green-600">Sanitized</span>
+    <Analytics />
                   </div>
+    <Analytics />
                 </div>
+    <Analytics />
               </div>
 
               {/* Analytics */}
@@ -825,6 +853,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                       progress={processedVideo.algorithmicScore} 
                       label={`Algorithm Score: ${processedVideo.algorithmicScore}/100`} 
                     />
+    <Analytics />
                   </div>
                   
                   <div>
@@ -832,6 +861,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                       progress={processedVideo.metadata.viral_score_prediction} 
                       label={`Viral Potential: ${processedVideo.metadata.viral_score_prediction}%`} 
                     />
+    <Analytics />
                   </div>
                   
                   <div className="glass-dark p-4 rounded-xl">
@@ -839,6 +869,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                     <p className="text-accent-primary">
                       {processedVideo.metadata.hashtags.map(tag => '#' + tag).join(' ')}
                     </p>
+    <Analytics />
                   </div>
                   
                   <div className="glass-dark p-4 rounded-xl">
@@ -846,9 +877,13 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                     <p className="text-body italic">
                       "{processedVideo.metadata.hooks[0]}"
                     </p>
+    <Analytics />
                   </div>
+    <Analytics />
                 </div>
+    <Analytics />
               </div>
+    <Analytics />
             </div>
 
             {/* Download Section */}
@@ -862,13 +897,16 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               <p className="text-muted mt-2">
                 Includes: Optimized video file + viral metadata package
               </p>
+    <Analytics />
             </div>
+    <Analytics />
           </div>
         )}
       </main>
 
       {/* Hidden canvas for processing */}
       <canvas ref={canvasRef} style={{display: 'none'}} />
+    <Analytics />
     </div>
   );
 }
