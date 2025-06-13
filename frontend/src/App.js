@@ -826,10 +826,10 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                 onClick={downloadProcessedVideo}
                 className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-12 py-4 rounded-lg font-bold text-xl hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105"
               >
-                📥 DOWNLOAD RESHUFFLED VIDEO
+                📥 DOWNLOAD SANITIZED VIDEO
               </button>
               <div className="text-purple-300 text-sm mt-2">
-                Includes: Processed video file + viral metadata package
+                Includes: Clean video file + viral metadata notes (algorithm-safe!)
               </div>
             </div>
           </div>
