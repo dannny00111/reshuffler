@@ -771,128 +771,103 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
           </div>
         )}
 
-        {/* Professional Results Display */}
+        {/* Results Display */}
         {processedVideo && (
-          <div className="result-container p-10 animate-on-scroll">
-            <div className="text-center mb-10">
-              <h2 className="text-5xl font-bold text-white mb-4 text-glow">
-                ✅ VIDEO OPTIMIZED!
+          <div className="glass-surface p-8 mt-8 animate-on-scroll">
+            <div className="text-center mb-8">
+              <h2 className="heading-primary mb-2">
+                ✅ Video Optimized!
               </h2>
-              <p className="text-2xl text-green-400 font-semibold">
-                Professionally processed and optimized for {selectedPlatform}
+              <p className="text-body">
+                Processed and optimized for {selectedPlatform}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
-              {/* Video Preview Section */}
-              <div className="glass p-8 rounded-2xl card-hover">
-                <h3 className="text-3xl font-bold text-white mb-6 text-metal">🎬 Processed Video</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Video Preview */}
+              <div className="glass-elevated p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-primary mb-4">🎬 Processed Video</h3>
                 <video 
                   src={processedVideo.videoUrl}
                   controls
-                  className="w-full rounded-xl mb-6 border-2 border-yellow-400/30 shadow-2xl"
+                  className="w-full rounded-lg mb-4 border border-tan-medium"
                 />
-                <div className="space-y-3 text-professional">
-                  <div className="flex justify-between items-center py-2 border-b border-yellow-400/20">
-                    <span className="font-semibold">📹 Duration:</span>
-                    <span className="text-yellow-400">{Math.round(processedVideo.originalDuration)}s → {Math.round(processedVideo.newDuration)}s</span>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-body">
+                    <span>📹 Duration:</span>
+                    <span>{Math.round(processedVideo.originalDuration)}s → {Math.round(processedVideo.newDuration)}s</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-b border-yellow-400/20">
-                    <span className="font-semibold">✂️ Segments Optimized:</span>
-                    <span className="text-yellow-400">{processedVideo.segmentsReshuffled}</span>
+                  <div className="flex justify-between items-center text-body">
+                    <span>✂️ Segments:</span>
+                    <span>{processedVideo.segmentsReshuffled}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-b border-yellow-400/20">
-                    <span className="font-semibold">🎨 Effects Applied:</span>
-                    <span className="text-yellow-400 text-sm">{processedVideo.optimizationsApplied.join(', ')}</span>
+                  <div className="flex justify-between items-center text-body">
+                    <span>🎨 Effects:</span>
+                    <span className="text-sm">{processedVideo.optimizationsApplied.join(', ')}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-b border-yellow-400/20">
-                    <span className="font-semibold">🎯 Platform:</span>
-                    <span className="text-yellow-400">{processedVideo.platform}</span>
+                  <div className="flex justify-between items-center text-body">
+                    <span>🎯 Platform:</span>
+                    <span>{processedVideo.platform}</span>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-b border-yellow-400/20">
-                    <span className="font-semibold">🔒 Metadata:</span>
-                    <span className="text-green-400">SANITIZED</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="font-semibold">📱 Filename:</span>
-                    <span className="text-yellow-400 text-sm">{processedVideo.naturalFilename}</span>
+                  <div className="flex justify-between items-center text-body">
+                    <span>🔒 Metadata:</span>
+                    <span className="text-success">Sanitized</span>
                   </div>
                 </div>
               </div>
 
-              {/* Analytics Section */}
-              <div className="glass p-8 rounded-2xl card-hover">
-                <h3 className="text-3xl font-bold text-white mb-6 text-metal">📊 Optimization Analytics</h3>
+              {/* Analytics */}
+              <div className="glass-elevated p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-primary mb-4">📊 Analytics</h3>
                 <div className="space-y-6">
-                  <div className="glass-dark p-6 rounded-xl">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-professional text-lg">Algorithm Score:</span>
-                      <span className="text-green-400 font-bold text-2xl">{processedVideo.algorithmicScore}/100</span>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-body">Algorithm Score:</span>
+                      <span className="text-success font-bold">{processedVideo.algorithmicScore}/100</span>
                     </div>
-                    <div className="progress-bar h-3 rounded-full">
-                      <div 
-                        className="progress-bar-fill h-full rounded-full"
-                        style={{width: `${processedVideo.algorithmicScore}%`}}
-                      ></div>
-                    </div>
+                    <ProgressBar progress={processedVideo.algorithmicScore} label="Algorithm Score" />
                   </div>
                   
-                  <div className="glass-dark p-6 rounded-xl">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-professional text-lg">Viral Potential:</span>
-                      <span className="text-green-400 font-bold text-2xl">{processedVideo.metadata.viral_score_prediction}%</span>
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-body">Viral Potential:</span>
+                      <span className="text-success font-bold">{processedVideo.metadata.viral_score_prediction}%</span>
                     </div>
-                    <div className="progress-bar h-3 rounded-full">
-                      <div 
-                        className="progress-bar-fill h-full rounded-full"
-                        style={{width: `${processedVideo.metadata.viral_score_prediction}%`}}
-                      ></div>
-                    </div>
+                    <ProgressBar progress={processedVideo.metadata.viral_score_prediction} label="Viral Score" />
                   </div>
                   
-                  <div className="glass-dark p-6 rounded-xl">
-                    <div className="flex justify-between items-center">
-                      <span className="text-professional text-lg">Optimization Level:</span>
-                      <span className="text-white font-bold text-xl">{processedVideo.optimizationLevel}</span>
-                    </div>
+                  <div className="glass-surface p-4 rounded-lg">
+                    <h4 className="text-lg font-semibold text-primary mb-2">🏷️ Hashtags</h4>
+                    <p className="text-accent">
+                      {processedVideo.metadata.hashtags.map(tag => '#' + tag).join(' ')}
+                    </p>
                   </div>
                   
-                  <div className="space-y-4">
-                    <h4 className="text-white font-bold text-xl mb-3">🏷️ Generated Hashtags:</h4>
-                    <div className="glass-dark p-4 rounded-xl">
-                      <div className="text-blue-300 font-semibold">
-                        {processedVideo.metadata.hashtags.map(tag => '#' + tag).join(' ')}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="text-white font-bold text-xl mb-3">🪝 Viral Hook:</h4>
-                    <div className="glass-dark p-4 rounded-xl">
-                      <div className="text-white font-semibold italic">
-                        "{processedVideo.metadata.hooks[0]}"
-                      </div>
-                    </div>
+                  <div className="glass-surface p-4 rounded-lg">
+                    <h4 className="text-lg font-semibold text-primary mb-2">🪝 Hook</h4>
+                    <p className="text-body italic">
+                      "{processedVideo.metadata.hooks[0]}"
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Professional Download Section */}
-            <div className="text-center mt-12">
+            {/* Download Section */}
+            <div className="text-center mt-8">
               <button
                 onClick={downloadProcessedVideo}
-                className="btn-metal text-white px-16 py-6 rounded-2xl font-bold text-2xl transition-all duration-300 hover:scale-105 shadow-2xl"
+                className="btn btn-primary text-lg px-8 py-4"
               >
-                📥 DOWNLOAD OPTIMIZED VIDEO
+                📥 Download Optimized Video
               </button>
-              <div className="text-professional text-lg mt-4 max-w-2xl mx-auto">
-                Includes: Professional video file + viral metadata package (algorithm-safe & sanitized!)
-              </div>
+              <p className="text-body mt-2">
+                Includes optimized video file and metadata package
+              </p>
             </div>
           </div>
         )}
-      </div>
+      </main>
 
       {/* Hidden canvas for processing */}
       <canvas ref={canvasRef} style={{display: 'none'}} />
