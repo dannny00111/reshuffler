@@ -393,7 +393,22 @@ Generate JSON with these fields:
     }
   };
 
-  // Main processing function
+  // Enhanced processing step handler
+  const updateProcessingStep = (step) => {
+    setProcessingStep(step);
+    console.log('📝 Processing step:', step);
+    
+    // Update background processing manager
+    if (backgroundManagerRef.current && isProcessing) {
+      backgroundManagerRef.current.updateProgress(
+        step,
+        processingProgress,
+        selectedPlatform
+      );
+    }
+  };
+
+  // Main processing function with background support
   const optimizeVideo = async () => {
     if (!videoFile || !videoRef.current) {
       alert('Please select a video file first');
@@ -410,16 +425,29 @@ Generate JSON with these fields:
     setProcessedVideo(null);
     setProcessingProgress(0);
     
+    // Start background processing
+    if (backgroundManagerRef.current) {
+      backgroundManagerRef.current.startBackgroundProcessing(
+        videoFile,
+        selectedPlatform,
+        optimizationLevel,
+        {
+          onDownload: downloadProcessedVideo,
+          onRetry: optimizeVideo
+        }
+      );
+    }
+    
     try {
       // Step 1: Generate viral metadata
-      setProcessingStep('🔥 Generating viral metadata...');
+      updateProcessingStep('🔥 Generating viral metadata...');
       console.log('🔥 Generating viral metadata for platform:', selectedPlatform);
       const metadata = await generateViralMetadata(selectedPlatform, optimizationLevel);
       setViralMetadata(metadata);
       console.log('✅ Metadata generated:', metadata);
       
       // Step 2: Process video with FFmpeg
-      setProcessingStep('🎬 Starting video processing...');
+      updateProcessingStep('🎬 Starting video processing...');
       console.log('🎬 Starting FFmpeg video processing...');
       const processedVideoData = await processVideoWithFFmpeg();
       console.log('✅ Video processing completed:', processedVideoData);
@@ -432,20 +460,37 @@ Generate JSON with these fields:
       );
       setAlgorithmicScore(Math.min(100, algorithmScore));
       
-      setProcessedVideo({
+      const finalData = {
         ...processedVideoData,
         metadata: metadata,
         algorithmicScore: algorithmScore,
         platform: selectedPlatform,
         optimizationLevel: optimizationLevel
-      });
+      };
       
-      setProcessingStep(`✅ Video successfully reshuffled and optimized for ${selectedPlatform}!`);
+      setProcessedVideo(finalData);
+      
+      updateProcessingStep(`✅ Video successfully reshuffled and optimized for ${selectedPlatform}!`);
       console.log('🎉 Video optimization completed successfully!');
+      
+      // Complete background processing
+      if (backgroundManagerRef.current) {
+        backgroundManagerRef.current.completeProcessing({
+          platform: selectedPlatform,
+          algorithmScore: algorithmScore,
+          duration: processedVideoData.newDuration
+        });
+      }
       
     } catch (error) {
       console.error('❌ Processing error:', error);
-      setProcessingStep(`❌ Processing failed: ${error.message}`);
+      updateProcessingStep(`❌ Processing failed: ${error.message}`);
+      
+      // Handle background processing error
+      if (backgroundManagerRef.current) {
+        backgroundManagerRef.current.errorProcessing(error, selectedPlatform);
+      }
+      
       alert(`Processing failed: ${error.message}\n\nPlease check the console for more details.`);
     } finally {
       setIsProcessing(false);
