@@ -4,6 +4,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import BackgroundProcessingManager from './BackgroundProcessingManager';
 import MetadataSanitizer from './MetadataSanitizer';
+import AnimationEngine from './AnimationEngine';
 
 const OPENROUTER_API_KEY = process.env.REACT_APP_OPENROUTER_API_KEY;
 
@@ -20,12 +21,34 @@ function App() {
   const [optimizationLevel, setOptimizationLevel] = useState('aggressive');
   const [processingProgress, setProcessingProgress] = useState(0);
   const [backgroundProcessingEnabled, setBackgroundProcessingEnabled] = useState(false);
+  
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const ffmpegRef = useRef(new FFmpeg());
   const [ffmpegLoaded, setFFmpegLoaded] = useState(false);
   const backgroundManagerRef = useRef(null);
   const metadataSanitizerRef = useRef(new MetadataSanitizer());
+  const animationEngineRef = useRef(new AnimationEngine());
+
+  // Initialize Animation Engine
+  useEffect(() => {
+    const initAnimations = async () => {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        animationEngineRef.current.init();
+        animationEngineRef.current.createLoadingAnimation();
+      }, 500);
+    };
+    
+    initAnimations();
+    
+    // Cleanup on unmount
+    return () => {
+      if (animationEngineRef.current) {
+        animationEngineRef.current.destroy();
+      }
+    };
+  }, []);
 
   // Initialize Background Processing Manager
   useEffect(() => {
