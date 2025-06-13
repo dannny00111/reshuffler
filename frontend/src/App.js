@@ -368,7 +368,7 @@ Generate JSON with these fields:
         'final_output.mp4'
       ]);
       
-      setProcessingStep('💾 Finalizing processed video...');
+      updateProcessingStep('💾 Finalizing processed video...');
       
       // Read the processed video
       console.log('📤 Reading processed video...');
