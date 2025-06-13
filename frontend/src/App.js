@@ -671,6 +671,14 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               </div>
             </div>
           )}
+          
+          {/* Sanitization Notice */}
+          <div className="mt-4 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+            <div className="flex items-center gap-2 text-green-300 text-sm">
+              <span className="text-lg">🔒</span>
+              <span><strong>Privacy Protected:</strong> All identifying metadata is stripped and replaced with natural phone-like data. Your videos will look like authentic mobile recordings to algorithms.</span>
+            </div>
+          </div>
         </div>
 
         {/* Upload Area */}
