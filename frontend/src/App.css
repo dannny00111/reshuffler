@@ -4,30 +4,59 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Brown Color Palette - Professional Video Editor Theme */
-  --brown-light: #D2B48C;        /* Tan */
-  --brown-medium: #C4965F;       /* Sandy Brown */
-  --brown-dark: #8B4513;         /* Saddle Brown */
-  --brown-darker: #5D2F0A;       /* Dark Chocolate */
-  --gold: #FFD700;               /* Gold */
-  --gold-dark: #B8860B;          /* Dark Goldenrod */
-  --green: #228B22;              /* Forest Green */
-  --green-dark: #1F5F1F;         /* Dark Forest Green */
-  --cream: #F5F5DC;              /* Beige */
-  --copper: #B87333;             /* Copper */
+  /* Modern Tan-Neutral Color Palette */
+  --tan-lightest: #fdf6ee;           /* Ultra light cream */
+  --tan-light: #f6f1eb;             /* Light theme base */
+  --tan-medium: #e3c9aa;            /* Modern tan */
+  --tan-neutral: #e3b47c;           /* Sand highlights */
+  --tan-warm: #c07639;              /* Warm tan */
+  --tan-deep: #aa4c17;              /* Deep warm brown */
   
-  /* Gradient Definitions */
-  --gradient-primary: linear-gradient(135deg, var(--brown-light) 0%, var(--brown-dark) 100%);
-  --gradient-secondary: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-  --gradient-accent: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
-  --gradient-warm: linear-gradient(135deg, var(--brown-light) 0%, var(--copper) 35%, var(--green) 70%, var(--gold) 100%);
-  --gradient-metal: linear-gradient(135deg, #C9AA76 0%, #8B7355 50%, #D4AF37 100%);
+  /* Dark Theme Colors */
+  --dark-base: #121212;             /* Warm matte black */
+  --dark-surface: #1e1e1e;          /* Elevated surface */
+  --dark-border: #2e2e2e;           /* Border color */
   
-  /* Advanced Shadows */
-  --shadow-brown: 0 8px 32px rgba(139, 69, 19, 0.3);
-  --shadow-gold: 0 8px 32px rgba(255, 215, 0, 0.3);
-  --shadow-green: 0 8px 32px rgba(34, 139, 34, 0.3);
-  --shadow-elevated: 0 20px 60px rgba(139, 69, 19, 0.4);
+  /* Accent Colors */
+  --accent-gold: #d4af37;           /* Professional gold */
+  --accent-green: #4a7c59;          /* Muted forest green */
+  --accent-red: #c53030;            /* Error/attention */
+  
+  /* Gradients */
+  --gradient-warm: linear-gradient(135deg, var(--tan-deep) 0%, var(--tan-warm) 100%);
+  --gradient-tan: linear-gradient(135deg, var(--tan-medium) 0%, var(--tan-neutral) 100%);
+  --gradient-surface: linear-gradient(145deg, var(--tan-lightest) 0%, var(--tan-light) 100%);
+  
+  /* Typography Scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(170, 76, 23, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(170, 76, 23, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(170, 76, 23, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(170, 76, 23, 0.1);
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
 }
 
 * {
