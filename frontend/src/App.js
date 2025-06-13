@@ -360,11 +360,17 @@ Generate JSON with these fields:
 
   // Main processing function
   const optimizeVideo = async () => {
-    if (!videoFile || !videoRef.current || !ffmpegLoaded) {
-      alert('Please wait for FFmpeg to load or select a video');
+    if (!videoFile || !videoRef.current) {
+      alert('Please select a video file first');
+      return;
+    }
+
+    if (!ffmpegLoaded) {
+      alert('FFmpeg is still loading. Please wait and try again.');
       return;
     }
     
+    console.log('🚀 Starting video optimization process...');
     setIsProcessing(true);
     setProcessedVideo(null);
     setProcessingProgress(0);
@@ -372,12 +378,16 @@ Generate JSON with these fields:
     try {
       // Step 1: Generate viral metadata
       setProcessingStep('🔥 Generating viral metadata...');
+      console.log('🔥 Generating viral metadata for platform:', selectedPlatform);
       const metadata = await generateViralMetadata(selectedPlatform, optimizationLevel);
       setViralMetadata(metadata);
+      console.log('✅ Metadata generated:', metadata);
       
       // Step 2: Process video with FFmpeg
       setProcessingStep('🎬 Starting video processing...');
+      console.log('🎬 Starting FFmpeg video processing...');
       const processedVideoData = await processVideoWithFFmpeg();
+      console.log('✅ Video processing completed:', processedVideoData);
       
       // Step 3: Calculate algorithmic score
       const algorithmScore = Math.floor(
@@ -396,10 +406,12 @@ Generate JSON with these fields:
       });
       
       setProcessingStep(`✅ Video successfully reshuffled and optimized for ${selectedPlatform}!`);
+      console.log('🎉 Video optimization completed successfully!');
       
     } catch (error) {
-      console.error('Processing error:', error);
+      console.error('❌ Processing error:', error);
       setProcessingStep(`❌ Processing failed: ${error.message}`);
+      alert(`Processing failed: ${error.message}\n\nPlease check the console for more details.`);
     } finally {
       setIsProcessing(false);
       setProcessingProgress(0);
