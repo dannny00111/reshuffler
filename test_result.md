@@ -188,20 +188,21 @@ frontend:
         comment: "Video upload and preview functionality appears to be working based on code review"
 
 metadata:
-  created_by: "testing_agent"
-  version: "1.0"
-  test_sequence: 1
+  created_by: "main_agent"
+  version: "1.1"
+  test_sequence: 2
   run_ui: false
 
 test_plan:
   current_focus:
-    - "Basic API Connectivity"
-    - "Status Check Creation"
-    - "Status Check Retrieval"
-  stuck_tasks: []
-  test_all: true
-  test_priority: "high_first"
+    - "FFmpeg Video Processing"
+  stuck_tasks:
+    - "FFmpeg Video Processing"
+  test_all: false
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "testing"
     message: "Completed testing of all backend API endpoints. All tests passed successfully. Created backend_test.py script for API testing."
+  - agent: "main"
+    message: "Fixed critical video processing issues: enhanced error handling, improved logging, fixed segment calculations, corrected FFmpeg commands, added API key. Video processing needs frontend testing to verify fixes."
