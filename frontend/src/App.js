@@ -322,7 +322,7 @@ Generate JSON with these fields:
         'reshuffled.mp4'
       ]);
       
-      setProcessingStep(`⚡ Applying ${selectedPlatform} optimizations...`);
+      updateProcessingStep(`⚡ Applying ${selectedPlatform} optimizations...`);
       
       // Apply platform-specific effects and optimizations
       let filterComplex = '';
