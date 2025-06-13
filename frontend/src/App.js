@@ -595,12 +595,12 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
         {/* FFmpeg Status */}
         <div className="flex gap-4 items-center justify-center">
           <div className={`inline-block px-4 py-2 rounded-full text-sm font-bold ${ffmpegLoaded ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300'}`}>
-            🛠️ FFmpeg: {ffmpegLoaded ? 'Ready' : 'Loading...'}
+            🛠️ Engine: {ffmpegLoaded ? 'Ready' : 'Loading...'}
           </div>
           
           {backgroundProcessingEnabled && (
             <div className="inline-block px-4 py-2 rounded-full text-sm font-bold bg-blue-500/20 text-blue-300">
-              📱 Background Processing: Enabled
+              📱 Background Mode: Enabled
             </div>
           )}
         </div>
