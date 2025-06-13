@@ -228,11 +228,12 @@ metadata:
 
 test_plan:
   current_focus:
-    - "FFmpeg Video Processing"
-  stuck_tasks:
-    - "FFmpeg Video Processing"
+    - "Ultra-Fast Processing Optimization"
+    - "Enhanced Background Processing"
+    - "Enhanced Dynamic Island Support"
+  stuck_tasks: []
   test_all: false
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "testing"
