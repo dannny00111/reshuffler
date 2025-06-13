@@ -159,6 +159,7 @@ function App() {
 
   const handleDrop = useCallback((event) => {
     event.preventDefault();
+    setIsDragActive(false);
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith('video/')) {
       setVideoFile(file);
@@ -173,6 +174,12 @@ function App() {
 
   const handleDragOver = useCallback((event) => {
     event.preventDefault();
+    setIsDragActive(true);
+  }, []);
+
+  const handleDragLeave = useCallback((event) => {
+    event.preventDefault();
+    setIsDragActive(false);
   }, []);
 
   const onVideoLoaded = () => {
