@@ -225,7 +225,7 @@ Generate JSON with these fields:
     }
   };
 
-  // ULTRA-FAST FAIL-PROOF VIDEO PROCESSING
+  // ULTRA-FAST SPEED-OPTIMIZED VIDEO PROCESSING
   const processVideoWithFFmpeg = async () => {
     if (!ffmpegLoaded || !videoFile) {
       throw new Error('Processing engine not ready or no video file selected');
@@ -236,116 +236,101 @@ Generate JSON with these fields:
     const sanitizer = metadataSanitizerRef.current;
     
     console.log('🚀 Starting ULTRA-FAST processing...');
-    updateProcessingStep('🚀 Preparing ultra-fast processing...');
+    updateProcessingStep('⚡ Initializing ultra-fast engine...');
     
     try {
       // STEP 1: Load video (optimized)
       updateProcessingStep('⚡ Loading video...');
       await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
       
-      // STEP 2: Quick analysis and smart segmentation
-      updateProcessingStep('🧠 Smart analysis...');
-      const targetDuration = Math.min(strategy.optimalDuration, videoDuration * 0.8); // Faster processing
-      const segmentCount = 2; // Simplified to 2 segments for speed
-      const segmentDuration = videoDuration / segmentCount;
+      // STEP 2: SIMPLIFIED, ULTRA-FAST processing approach
+      updateProcessingStep('🧠 Smart ultra-fast analysis...');
+      const targetDuration = Math.min(strategy.optimalDuration, videoDuration * 0.9);
       
-      // Smart segment selection (no complex calculations)
-      const keyMoments = [0, Math.floor(videoDuration * 0.6)]; // Start + key moment
+      // SINGLE-PASS PROCESSING for maximum speed
+      console.log(`⚡ Ultra-fast mode: Target ${targetDuration}s from ${videoDuration}s`);
+      updateProcessingStep(`✂️ Single-pass ultra-fast processing...`);
       
-      console.log(`⚡ Fast processing: ${keyMoments.length} segments, target: ${targetDuration}s`);
-      updateProcessingStep(`✂️ Processing ${keyMoments.length} key moments...`);
-      
-      // STEP 3: Ultra-fast segment extraction (parallel processing simulation)
-      const extractPromises = keyMoments.map(async (startTime, index) => {
-        const duration = Math.min(segmentDuration * 0.9, targetDuration / keyMoments.length);
-        const segmentName = `fast_${index}.mp4`;
-        
-        console.log(`⚡ Quick extract ${index}: ${startTime}s for ${duration}s`);
-        
-        // Ultra-fast extraction with optimized settings
-        await ffmpeg.exec([
-          '-i', 'input.mp4',
-          '-ss', startTime.toString(),
-          '-t', duration.toString(),
-          '-c:v', 'libx264',
-          '-preset', 'ultrafast', // Fastest possible
-          '-crf', '28', // Faster encoding
-          '-c:a', 'aac',
-          '-b:a', '96k', // Lower bitrate for speed
-          '-avoid_negative_ts', 'make_zero',
-          '-y',
-          segmentName
-        ]);
-        
-        return segmentName;
-      });
-      
-      // Wait for all extractions (should be very fast)
-      const segmentFiles = await Promise.all(extractPromises);
-      
-      updateProcessingStep('🔄 Smart combining...');
-      
-      // STEP 4: Ultra-fast concatenation
-      const concatContent = segmentFiles.map(file => `file '${file}'`).join('\n');
-      await ffmpeg.writeFile('list.txt', concatContent);
-      
-      await ffmpeg.exec([
-        '-f', 'concat',
-        '-safe', '0',
-        '-i', 'list.txt',
-        '-c', 'copy', // No re-encoding for speed
-        '-avoid_negative_ts', 'make_zero',
-        '-y',
-        'combined.mp4'
-      ]);
-      
-      updateProcessingStep(`🎨 Applying ${selectedPlatform} style...`);
-      
-      // STEP 5: Fast platform optimization
+      // Ultra-fast aspect ratio handling
       const aspectRatio = sanitizer.getNaturalAspectRatio(selectedPlatform, 720, 1280);
       
-      // Simplified, fast filter
-      const fastFilter = strategy.aspectRatio === '9:16' ? 
-        'scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2:black,eq=contrast=1.05:saturation=1.05' :
-        strategy.aspectRatio === '4:5' ? 
-        'scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2:black,eq=contrast=1.05:saturation=1.05' :
-        'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:black,eq=contrast=1.05:saturation=1.05';
+      // ULTRA-SIMPLIFIED filter for maximum speed
+      let fastFilter;
+      if (strategy.aspectRatio === '9:16') {
+        fastFilter = 'scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2:black';
+      } else if (strategy.aspectRatio === '4:5') {
+        fastFilter = 'scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2:black';
+      } else {
+        fastFilter = 'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:black';
+      }
       
-      // Generate natural filename
+      // Generate metadata for sanitization
       const naturalFilename = sanitizer.generateNaturalFilename(selectedPlatform);
       const deviceMeta = sanitizer.generateDeviceMetadata();
       
-      // STEP 6: Final processing with metadata sanitization (optimized)
-      await ffmpeg.exec([
-        '-i', 'combined.mp4',
-        '-vf', fastFilter,
-        '-c:v', 'libx264',
-        '-preset', 'fast', // Good balance of speed and quality
-        '-crf', '23',
-        '-c:a', 'aac',
-        '-b:a', '128k',
-        
-        // Complete metadata sanitization
-        '-map_metadata', '-1',
-        '-map_chapters', '-1',
-        '-metadata', `creation_time=${deviceMeta.creationTime}`,
-        '-metadata', 'title=',
-        '-metadata', 'comment=',
-        '-metadata', 'encoder=',
-        
-        // Mobile optimization
-        '-movflags', '+faststart',
-        '-pix_fmt', 'yuv420p',
-        '-profile:v', 'baseline',
-        '-level', '3.0',
-        
-        '-y',
-        'final.mp4'
-      ]);
+      // STEP 3: SINGLE ULTRA-FAST COMMAND for maximum speed
+      updateProcessingStep('🚀 Ultra-fast single-pass processing...');
       
-      updateProcessingStep('📱 Finalizing...');
+      let processingCommand;
       
-      // STEP 7: Read final video
+      if (videoDuration > strategy.optimalDuration + 5) {
+        // Need trimming + processing
+        const startTime = Math.max(0, (videoDuration - targetDuration) / 2); // Start from middle-ish
+        
+        processingCommand = [
+          '-i', 'input.mp4',
+          '-ss', startTime.toString(),
+          '-t', targetDuration.toString(),
+          '-vf', fastFilter,
+          '-c:v', 'libx264',
+          '-preset', 'ultrafast', // Fastest possible preset
+          '-crf', '28', // Lower quality for speed
+          '-c:a', 'aac',
+          '-b:a', '96k', // Lower audio bitrate for speed
+          '-avoid_negative_ts', 'make_zero',
+          
+          // Minimal metadata sanitization for speed
+          '-map_metadata', '-1',
+          '-metadata', `creation_time=${deviceMeta.creationTime}`,
+          
+          // Mobile optimization (minimal)
+          '-movflags', '+faststart',
+          '-pix_fmt', 'yuv420p',
+          
+          '-y',
+          'final.mp4'
+        ];
+      } else {
+        // Just optimize without trimming
+        processingCommand = [
+          '-i', 'input.mp4',
+          '-vf', fastFilter,
+          '-c:v', 'libx264',
+          '-preset', 'ultrafast',
+          '-crf', '28',
+          '-c:a', 'aac',
+          '-b:a', '96k',
+          '-avoid_negative_ts', 'make_zero',
+          
+          // Minimal metadata sanitization
+          '-map_metadata', '-1',
+          '-metadata', `creation_time=${deviceMeta.creationTime}`,
+          
+          // Mobile optimization (minimal)
+          '-movflags', '+faststart',
+          '-pix_fmt', 'yuv420p',
+          
+          '-y',
+          'final.mp4'
+        ];
+      }
+      
+      // Execute the ultra-fast single command
+      await ffmpeg.exec(processingCommand);
+      
+      updateProcessingStep('📱 Finalizing ultra-fast output...');
+      
+      // STEP 4: Read final video
       const data = await ffmpeg.readFile('final.mp4');
       const processedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
       const processedVideoUrl = URL.createObjectURL(processedVideoBlob);
@@ -355,34 +340,31 @@ Generate JSON with these fields:
       return {
         videoUrl: processedVideoUrl,
         videoBlob: processedVideoBlob,
-        segmentsReshuffled: keyMoments.length,
+        segmentsReshuffled: 1, // Simplified for speed
         originalDuration: videoDuration,
-        newDuration: targetDuration,
-        optimizationsApplied: [`fast_${strategy.effects}`, 'metadata_sanitized', `${strategy.aspectRatio}_optimized`],
+        newDuration: Math.min(targetDuration, videoDuration),
+        optimizationsApplied: [`ultra_fast_${strategy.effects}`, 'metadata_sanitized', `${strategy.aspectRatio}_optimized`],
         naturalFilename: naturalFilename,
         deviceMetadata: deviceMeta
       };
       
     } catch (error) {
-      console.error('❌ Processing failed:', error);
+      console.error('❌ Ultra-fast processing failed:', error);
       
-      // FALLBACK: If processing fails, try minimal processing
+      // SUPER-MINIMAL FALLBACK for maximum reliability
       try {
-        updateProcessingStep('🔄 Trying fallback method...');
+        updateProcessingStep('🔄 Minimal fallback processing...');
         
         const naturalFilename = sanitizer.generateNaturalFilename(selectedPlatform);
-        const deviceMeta = sanitizer.generateDeviceMetadata();
         
-        // Minimal processing - just sanitize metadata and optimize
+        // Absolutely minimal processing - just convert and sanitize
         await ffmpeg.exec([
           '-i', 'input.mp4',
           '-c:v', 'libx264',
           '-preset', 'ultrafast',
-          '-crf', '28',
-          '-c:a', 'aac',
-          '-b:a', '96k',
+          '-crf', '30', // Even lower quality for reliability
+          '-c:a', 'copy', // Don't re-encode audio
           '-map_metadata', '-1',
-          '-metadata', `creation_time=${deviceMeta.creationTime}`,
           '-movflags', '+faststart',
           '-y',
           'fallback.mp4'
@@ -392,7 +374,7 @@ Generate JSON with these fields:
         const processedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
         const processedVideoUrl = URL.createObjectURL(processedVideoBlob);
         
-        console.log('✅ Fallback processing completed');
+        console.log('✅ Minimal fallback completed');
         
         return {
           videoUrl: processedVideoUrl,
@@ -400,14 +382,14 @@ Generate JSON with these fields:
           segmentsReshuffled: 1,
           originalDuration: videoDuration,
           newDuration: videoDuration,
-          optimizationsApplied: ['metadata_sanitized', 'fallback_mode'],
+          optimizationsApplied: ['minimal_processing', 'metadata_sanitized'],
           naturalFilename: naturalFilename,
-          deviceMetadata: deviceMeta
+          deviceMetadata: { device: 'Generic Mobile', creationTime: new Date().toISOString() }
         };
         
       } catch (fallbackError) {
-        console.error('❌ Fallback also failed:', fallbackError);
-        throw new Error(`Processing failed: ${error.message || error}. Fallback failed: ${fallbackError.message || fallbackError}`);
+        console.error('❌ Even fallback failed:', fallbackError);
+        throw new Error(`Ultra-fast processing failed: ${error.message || error}. Fallback failed: ${fallbackError.message || fallbackError}`);
       }
     }
   };
