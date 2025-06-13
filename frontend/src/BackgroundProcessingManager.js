@@ -1,10 +1,13 @@
-// Background Processing Manager
+// Enhanced Background Processing Manager - Fixed Minimized Processing
 class BackgroundProcessingManager {
   constructor() {
     this.serviceWorkerRegistration = null;
     this.notificationPermission = 'default';
     this.isProcessingInBackground = false;
     this.processingCallbacks = new Map();
+    this.keepAliveInterval = null;
+    this.messageChannel = null;
+    this.wakeLock = null;
     
     this.init();
   }
@@ -16,9 +19,17 @@ class BackgroundProcessingManager {
         this.serviceWorkerRegistration = await navigator.serviceWorker.register('/sw.js');
         console.log('✅ Service Worker registered successfully');
         
+        // Create message channel for reliable communication
+        this.messageChannel = new MessageChannel();
+        
         // Listen for messages from service worker
         navigator.serviceWorker.addEventListener('message', (event) => {
           this.handleServiceWorkerMessage(event.data);
+        });
+        
+        // Handle service worker updates
+        this.serviceWorkerRegistration.addEventListener('updatefound', () => {
+          console.log('🔄 Service Worker update found');
         });
         
       } catch (error) {
@@ -29,17 +40,32 @@ class BackgroundProcessingManager {
     // Request notification permission
     await this.requestNotificationPermission();
     
-    // Listen for page visibility changes
+    // Enhanced visibility change handling
     document.addEventListener('visibilitychange', () => {
       this.handleVisibilityChange();
     });
 
-    // Listen for beforeunload to warn about ongoing processing
+    // Prevent page unload during processing
     window.addEventListener('beforeunload', (event) => {
       if (this.isProcessingInBackground) {
         event.preventDefault();
         event.returnValue = 'Video processing is still running. Are you sure you want to leave?';
         return event.returnValue;
+      }
+    });
+
+    // Handle page focus/blur for better background management
+    window.addEventListener('focus', () => {
+      if (this.isProcessingInBackground) {
+        console.log('📱 App focused during processing');
+        this.optimizeForForeground();
+      }
+    });
+
+    window.addEventListener('blur', () => {
+      if (this.isProcessingInBackground) {
+        console.log('📱 App blurred during processing');
+        this.optimizeForBackground();
       }
     });
   }
@@ -57,8 +83,8 @@ class BackgroundProcessingManager {
 
   showWelcomeNotification() {
     if (this.serviceWorkerRegistration) {
-      this.serviceWorkerRegistration.showNotification('🎬 Viral Reshuffler Ready', {
-        body: 'Background processing enabled! You can multitask while videos process.',
+      this.serviceWorkerRegistration.showNotification('🎬 AyoRecuts Ready', {
+        body: 'Ultra-fast background processing enabled! Multitask while videos process.',
         icon: '/favicon.ico',
         badge: '/favicon.ico',
         tag: 'welcome',
@@ -73,28 +99,125 @@ class BackgroundProcessingManager {
     }
   }
 
-  startBackgroundProcessing(videoFile, platform, optimizationLevel, callbacks) {
+  async startBackgroundProcessing(videoFile, platform, optimizationLevel, callbacks) {
     this.isProcessingInBackground = true;
     this.processingCallbacks.set('current', callbacks);
+    
+    // Request wake lock to prevent sleep during processing
+    try {
+      if ('wakeLock' in navigator) {
+        this.wakeLock = await navigator.wakeLock.request('screen');
+        console.log('🔒 Wake lock acquired');
+      }
+    } catch (error) {
+      console.log('⚠️ Wake lock not available:', error);
+    }
     
     // Update page title to show processing status
     this.updatePageTitle(`⚡ AyoRecuts - Processing ${platform}...`);
     
+    // Start aggressive keep-alive mechanisms
+    this.startKeepAlive();
+    
+    // Register background sync with service worker
+    if (this.serviceWorkerRegistration && 'sync' in this.serviceWorkerRegistration) {
+      try {
+        await this.serviceWorkerRegistration.sync.register('video-processing');
+        console.log('📡 Background sync registered');
+      } catch (error) {
+        console.log('⚠️ Background sync not available:', error);
+      }
+    }
+    
+    // Notify service worker about processing start
+    this.sendToServiceWorker('REGISTER_PROCESSING', {
+      platform,
+      optimizationLevel,
+      startTime: Date.now()
+    });
+    
     // Show initial notification
-    this.sendNotification('PROCESSING_UPDATE', {
+    this.sendToServiceWorker('PROCESSING_UPDATE', {
       step: 'Starting ultra-fast processing...',
       progress: 0,
       platform
     });
 
-    console.log('🚀 Background processing started for', platform);
+    console.log('🚀 Enhanced background processing started for', platform);
+  }
+
+  startKeepAlive() {
+    // Multiple keep-alive strategies for maximum reliability
     
-    // Keep page alive during processing
-    if (typeof window !== 'undefined') {
-      this.keepAlive = setInterval(() => {
-        // Ping to keep background processing active
-        console.log('📱 Background processing active...');
-      }, 5000);
+    // 1. Interval-based keep-alive (most important)
+    this.keepAliveInterval = setInterval(() => {
+      if (this.isProcessingInBackground) {
+        console.log('💓 Keep-alive ping');
+        
+        // Send keep-alive to service worker
+        this.sendToServiceWorker('KEEP_ALIVE', { timestamp: Date.now() });
+        
+        // Update page metadata to maintain activity
+        document.title = `🎬 ${Math.floor(Math.random() * 100)}% - Processing...`;
+        
+        // Trigger micro-activity to prevent throttling
+        this.triggerMicroActivity();
+      }
+    }, 15000); // Every 15 seconds
+    
+    // 2. Service worker timer
+    this.sendToServiceWorker('START_BACKGROUND_TIMER', {});
+    
+    // 3. Visibility API handling
+    if (document.hidden) {
+      this.optimizeForBackground();
+    }
+  }
+
+  triggerMicroActivity() {
+    // Create minimal DOM activity to prevent tab throttling
+    const hidden = document.createElement('div');
+    hidden.style.display = 'none';
+    hidden.textContent = Date.now().toString();
+    document.body.appendChild(hidden);
+    
+    // Remove immediately to keep DOM clean
+    setTimeout(() => {
+      if (hidden.parentNode) {
+        hidden.parentNode.removeChild(hidden);
+      }
+    }, 10);
+  }
+
+  optimizeForBackground() {
+    console.log('📱 Optimizing for background processing');
+    
+    // Send message to service worker to maintain processing
+    this.sendToServiceWorker('PROCESSING_UPDATE', {
+      step: 'Processing continues in background...',
+      progress: 50,
+      platform: 'background'
+    });
+    
+    // Reduce update frequency to conserve resources
+    if (this.keepAliveInterval) {
+      clearInterval(this.keepAliveInterval);
+      this.keepAliveInterval = setInterval(() => {
+        if (this.isProcessingInBackground) {
+          console.log('💓 Background keep-alive');
+          this.sendToServiceWorker('KEEP_ALIVE', { timestamp: Date.now() });
+        }
+      }, 20000); // Slightly longer intervals in background
+    }
+  }
+
+  optimizeForForeground() {
+    console.log('📱 Optimizing for foreground processing');
+    
+    // Restore normal update frequency
+    if (this.keepAliveInterval) {
+      clearInterval(this.keepAliveInterval);
+      this.startKeepAlive();
     }
   }
 
@@ -103,30 +226,37 @@ class BackgroundProcessingManager {
     this.updatePageTitle(`🎬 ${Math.round(progress)}% - ${platform} video`);
     
     // Send progress to service worker for notifications
-    this.sendNotification('PROCESSING_UPDATE', {
+    this.sendToServiceWorker('PROCESSING_UPDATE', {
       step,
       progress: Math.round(progress),
       platform
     });
 
-    // Update favicon with progress (simple indicator)
+    // Update favicon with progress
     this.updateFavicon(progress);
+    
+    // Enhanced Dynamic Island update
+    this.updateDynamicIslandStatus(step, progress, platform);
   }
 
   completeProcessing(data) {
     this.isProcessingInBackground = false;
     
-    // Clear keep alive
-    if (this.keepAlive) {
-      clearInterval(this.keepAlive);
-      this.keepAlive = null;
+    // Clear all keep-alive mechanisms
+    this.stopKeepAlive();
+    
+    // Release wake lock
+    if (this.wakeLock) {
+      this.wakeLock.release();
+      this.wakeLock = null;
+      console.log('🔓 Wake lock released');
     }
     
     // Reset page title
     this.updatePageTitle('✅ Video Ready - AyoRecuts');
     
     // Send completion notification
-    this.sendNotification('PROCESSING_COMPLETE', data);
+    this.sendToServiceWorker('PROCESSING_COMPLETE', data);
     
     // Reset favicon
     this.updateFavicon(100);
@@ -136,23 +266,26 @@ class BackgroundProcessingManager {
       window.focus();
     }
 
-    console.log('✅ Background processing completed');
+    console.log('✅ Enhanced background processing completed');
   }
 
   errorProcessing(error, platform) {
     this.isProcessingInBackground = false;
     
-    // Clear keep alive
-    if (this.keepAlive) {
-      clearInterval(this.keepAlive);
-      this.keepAlive = null;
+    // Clear all keep-alive mechanisms
+    this.stopKeepAlive();
+    
+    // Release wake lock
+    if (this.wakeLock) {
+      this.wakeLock.release();
+      this.wakeLock = null;
     }
     
     // Update page title
     this.updatePageTitle('❌ Processing Failed - AyoRecuts');
     
     // Send error notification
-    this.sendNotification('PROCESSING_ERROR', {
+    this.sendToServiceWorker('PROCESSING_ERROR', {
       error: error.message || error,
       platform
     });
@@ -160,12 +293,22 @@ class BackgroundProcessingManager {
     // Reset favicon
     this.updateFavicon(0);
 
-    console.error('❌ Background processing failed:', error);
+    console.error('❌ Enhanced background processing failed:', error);
   }
 
-  sendNotification(type, data) {
-    if (this.serviceWorkerRegistration && this.notificationPermission === 'granted') {
-      this.serviceWorkerRegistration.active?.postMessage({
+  stopKeepAlive() {
+    if (this.keepAliveInterval) {
+      clearInterval(this.keepAliveInterval);
+      this.keepAliveInterval = null;
+    }
+    
+    // Stop service worker timer
+    this.sendToServiceWorker('STOP_BACKGROUND_TIMER', {});
+  }
+
+  sendToServiceWorker(type, data) {
+    if (this.serviceWorkerRegistration && this.serviceWorkerRegistration.active) {
+      this.serviceWorkerRegistration.active.postMessage({
         type,
         data
       });
@@ -177,7 +320,7 @@ class BackgroundProcessingManager {
   }
 
   updateFavicon(progress) {
-    // Create a simple progress indicator in favicon
+    // Enhanced favicon with better progress indication
     const canvas = document.createElement('canvas');
     canvas.width = 32;
     canvas.height = 32;
@@ -189,7 +332,7 @@ class BackgroundProcessingManager {
     if (progress > 0 && progress < 100) {
       // Draw progress circle
       ctx.strokeStyle = '#8b5cf6';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.arc(16, 16, 12, -Math.PI/2, (-Math.PI/2) + (2 * Math.PI * progress / 100));
       ctx.stroke();
@@ -199,10 +342,16 @@ class BackgroundProcessingManager {
       ctx.beginPath();
       ctx.arc(16, 16, 4, 0, 2 * Math.PI);
       ctx.fill();
+      
+      // Draw progress text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '8px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(Math.round(progress), 16, 20);
     } else if (progress === 100) {
       // Draw checkmark
       ctx.strokeStyle = '#10b981';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(8, 16);
       ctx.lineTo(14, 22);
@@ -220,18 +369,20 @@ class BackgroundProcessingManager {
 
   handleVisibilityChange() {
     if (document.hidden && this.isProcessingInBackground) {
-      console.log('📱 App moved to background, processing continues...');
+      console.log('📱 App minimized, maintaining background processing...');
+      this.optimizeForBackground();
       
       // Show notification that processing continues
       if (this.notificationPermission === 'granted') {
-        this.sendNotification('PROCESSING_UPDATE', {
+        this.sendToServiceWorker('PROCESSING_UPDATE', {
           step: 'Processing continues in background...',
-          progress: 50, // Approximate progress
-          platform: 'current'
+          progress: 50,
+          platform: 'background'
         });
       }
     } else if (!document.hidden && this.isProcessingInBackground) {
-      console.log('📱 App returned to foreground');
+      console.log('📱 App restored, optimizing for foreground...');
+      this.optimizeForForeground();
     }
   }
 
@@ -243,7 +394,6 @@ class BackgroundProcessingManager {
       
       switch (action) {
         case 'view':
-          // Scroll to results or show current progress
           window.scrollTo({ top: 0, behavior: 'smooth' });
           break;
         case 'download':
@@ -257,23 +407,27 @@ class BackgroundProcessingManager {
           }
           break;
       }
+    } else if (type === 'BACKGROUND_KEEPALIVE') {
+      // Respond to service worker keep-alive
+      console.log('💓 Service worker keep-alive received');
     }
   }
 
-  // Check if device supports Dynamic Island (iOS 16+)
+  // Enhanced Dynamic Island support for iPhone
   supportsDynamicIsland() {
-    return /iPhone|iPad|iPod/.test(navigator.userAgent) && 
-           window.DeviceMotionEvent !== undefined;
+    return /iPhone/.test(navigator.userAgent) && 
+           window.DeviceMotionEvent !== undefined &&
+           window.screen.height >= 852; // iPhone 14 Pro and later
   }
 
-  // Enhanced status for Dynamic Island
   updateDynamicIslandStatus(step, progress, platform) {
     if (this.supportsDynamicIsland()) {
-      // Update page metadata for iOS Dynamic Island
+      // Enhanced Dynamic Island metadata
       const metaTags = {
         'apple-mobile-web-app-status-bar-style': 'black-translucent',
         'apple-mobile-web-app-title': `${Math.round(progress)}% ${platform}`,
-        'theme-color': progress < 100 ? '#8b5cf6' : '#10b981'
+        'theme-color': progress < 100 ? '#8b5cf6' : '#10b981',
+        'apple-mobile-web-app-capable': 'yes'
       };
       
       Object.entries(metaTags).forEach(([name, content]) => {
@@ -285,6 +439,9 @@ class BackgroundProcessingManager {
         }
         meta.content = content;
       });
+      
+      // Update title for Dynamic Island
+      document.title = `🎬 ${Math.round(progress)}% - ${step}`;
     }
   }
 }
