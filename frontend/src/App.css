@@ -54,23 +54,20 @@
   }
 }
 
-/* Custom scrollbar for generated content */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+/* Loading shimmer effect */
+.loading-shimmer {
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.3) 0%, rgba(59, 130, 246, 0.6) 50%, rgba(139, 92, 246, 0.3) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, #8b5cf6, #3b82f6);
-  border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(45deg, #7c3aed, #2563eb);
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Enhanced hover effects */
@@ -84,103 +81,153 @@
 
 /* Glassmorphism effects */
 .backdrop-blur-sm {
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
 }
 
-/* Grid improvements */
-.grid {
-  gap: 1rem;
+/* Algorithm domination styling */
+.algorithm-score-high {
+  background: linear-gradient(45deg, #10b981, #059669);
 }
 
-/* Responsive improvements */
+.algorithm-score-medium {
+  background: linear-gradient(45deg, #f59e0b, #d97706);
+}
+
+.algorithm-score-low {
+  background: linear-gradient(45deg, #ef4444, #dc2626);
+}
+
+/* Viral potential indicators */
+.viral-high {
+  background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+  animation: viral-pulse 2s infinite;
+}
+
+@keyframes viral-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+  }
+}
+
+/* Platform-specific styling */
+.platform-tiktok {
+  background: linear-gradient(45deg, #ff0050, #000000);
+}
+
+.platform-instagram {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.platform-youtube {
+  background: linear-gradient(45deg, #ff0000, #cc0000);
+}
+
+.platform-twitter {
+  background: linear-gradient(45deg, #1da1f2, #0d8bd9);
+}
+
+/* Optimization level indicators */
+.opt-mild {
+  border-left: 4px solid #10b981;
+}
+
+.opt-balanced {
+  border-left: 4px solid #f59e0b;
+}
+
+.opt-aggressive {
+  border-left: 4px solid #ef4444;
+}
+
+/* Responsive design improvements */
 @media (max-width: 768px) {
   .container {
-    flex-direction: column;
-  }
-  
-  .w-96 {
-    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
   .text-4xl {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   .text-7xl {
-    font-size: 3rem;
+    font-size: 3.5rem;
   }
   
   .grid-cols-3 {
     grid-template-columns: 1fr;
   }
+  
+  .px-10 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  
+  .py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
 }
 
 @media (max-width: 640px) {
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+  }
+  
   .px-8 {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
-  .py-4 {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
 }
 
-/* Loading animations */
-.loading-shimmer {
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-@keyframes shimmer {
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #8b5cf6, #3b82f6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #7c3aed, #2563eb);
+}
+
+/* Enhanced algorithm domination effects */
+.algorithm-hack {
+  position: relative;
+  overflow: hidden;
+}
+
+.algorithm-hack::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: algorithm-sweep 3s infinite;
+}
+
+@keyframes algorithm-sweep {
   0% {
-    background-position: -200% 0;
+    left: -100%;
   }
   100% {
-    background-position: 200% 0;
+    left: 100%;
   }
-}
-
-/* Enhanced button styles */
-.btn-viral {
-  background: linear-gradient(45deg, #ff006e, #fb8500, #8338ec, #3a86ff);
-  background-size: 300% 300%;
-  animation: gradient-shift 3s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Viral score indicators */
-.viral-score-high {
-  background: linear-gradient(45deg, #00f5ff, #00c851);
-}
-
-.viral-score-medium {
-  background: linear-gradient(45deg, #ffbb33, #ff8800);
-}
-
-.viral-score-low {
-  background: linear-gradient(45deg, #ff4444, #cc0000);
-}
-
-/* Platform badges */
-.platform-badge {
-  background: rgba(139, 92, 246, 0.3);
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  border-radius: 9999px;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 600;
 }
