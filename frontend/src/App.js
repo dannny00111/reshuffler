@@ -225,188 +225,190 @@ Generate JSON with these fields:
     }
   };
 
-  // SANITIZED VIDEO PROCESSING WITH METADATA CLEANING
+  // ULTRA-FAST FAIL-PROOF VIDEO PROCESSING
   const processVideoWithFFmpeg = async () => {
     if (!ffmpegLoaded || !videoFile) {
-      throw new Error('FFmpeg not loaded or no video file');
+      throw new Error('Processing engine not ready or no video file selected');
     }
 
     const ffmpeg = ffmpegRef.current;
     const strategy = platformStrategies[selectedPlatform];
     const sanitizer = metadataSanitizerRef.current;
     
-    console.log('🎬 Starting SANITIZED video processing with strategy:', strategy);
-    updateProcessingStep('🔒 Preparing sanitized video processing...');
+    console.log('🚀 Starting ULTRA-FAST processing...');
+    updateProcessingStep('🚀 Preparing ultra-fast processing...');
     
     try {
-      // Write input file with original name
-      console.log('📁 Loading video file into FFmpeg...');
-      await ffmpeg.writeFile('original_input.mp4', await fetchFile(videoFile));
+      // STEP 1: Load video (optimized)
+      updateProcessingStep('⚡ Loading video...');
+      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
       
-      // STEP 1: Create a clean intermediate file with no metadata
-      console.log('🧹 Sanitizing metadata...');
-      await ffmpeg.exec([
-        '-i', 'original_input.mp4',
-        '-map_metadata', '-1', // Strip all metadata
-        '-map_chapters', '-1',
-        '-c', 'copy',
-        '-y',
-        'clean_input.mp4'
-      ]);
-      
-      // Get video info from clean file
-      console.log('📊 Getting video information...');
-      await ffmpeg.exec(['-i', 'clean_input.mp4']);
-      
-      // Calculate segments for reshuffling
-      const targetDuration = strategy.optimalDuration;
-      const segmentCount = Math.max(2, Math.min(4, Math.floor(videoDuration / 2))); // Fewer segments to look more natural
+      // STEP 2: Quick analysis and smart segmentation
+      updateProcessingStep('🧠 Smart analysis...');
+      const targetDuration = Math.min(strategy.optimalDuration, videoDuration * 0.8); // Faster processing
+      const segmentCount = 2; // Simplified to 2 segments for speed
       const segmentDuration = videoDuration / segmentCount;
       
-      console.log(`📐 Video info: ${videoDuration}s total, ${segmentCount} segments of ${segmentDuration}s each`);
-      updateProcessingStep(`✂️ Creating ${segmentCount} natural segments...`);
+      // Smart segment selection (no complex calculations)
+      const keyMoments = [0, Math.floor(videoDuration * 0.6)]; // Start + key moment
       
-      // Create segment list based on platform strategy (simplified for naturalness)
-      let segmentOrder = [];
+      console.log(`⚡ Fast processing: ${keyMoments.length} segments, target: ${targetDuration}s`);
+      updateProcessingStep(`✂️ Processing ${keyMoments.length} key moments...`);
       
-      switch (strategy.segmentStrategy) {
-        case 'hook-heavy': // TikTok - Start strong
-          segmentOrder = [0, Math.floor(segmentCount * 0.6)];
-          break;
-        case 'story-driven': // Instagram - Keep flow
-          segmentOrder = [0, Math.floor(segmentCount * 0.3)];
-          break;
-        case 'retention-focused': // YouTube - Hook early
-          segmentOrder = [0, Math.floor(segmentCount * 0.4)];
-          break;
-        case 'controversy-light': // Twitter - Quick impact
-          segmentOrder = [Math.floor(segmentCount * 0.2), 0];
-          break;
-        default:
-          segmentOrder = [0, 1];
-      }
-      
-      // Ensure valid segments (max 2-3 for naturalness)
-      segmentOrder = segmentOrder.filter(idx => idx < segmentCount).slice(0, 3);
-      
-      console.log('📋 Natural segment order:', segmentOrder);
-      updateProcessingStep(`🎬 Extracting ${segmentOrder.length} key moments...`);
-      
-      // Extract segments with randomized encoding to avoid detection
-      const encodingParams = sanitizer.getRandomizedEncodingParams();
-      const segmentFiles = [];
-      
-      for (let i = 0; i < segmentOrder.length; i++) {
-        const segmentIndex = segmentOrder[i];
-        const startTime = segmentIndex * segmentDuration;
-        const duration = Math.min(segmentDuration * 0.95, targetDuration / segmentOrder.length);
+      // STEP 3: Ultra-fast segment extraction (parallel processing simulation)
+      const extractPromises = keyMoments.map(async (startTime, index) => {
+        const duration = Math.min(segmentDuration * 0.9, targetDuration / keyMoments.length);
+        const segmentName = `fast_${index}.mp4`;
         
-        const segmentName = `seg_${i}.mp4`;
-        console.log(`✂️ Extracting segment ${i}: from ${startTime}s for ${duration}s`);
+        console.log(`⚡ Quick extract ${index}: ${startTime}s for ${duration}s`);
         
-        // Use sanitized encoding
+        // Ultra-fast extraction with optimized settings
         await ffmpeg.exec([
-          '-i', 'clean_input.mp4',
+          '-i', 'input.mp4',
           '-ss', startTime.toString(),
           '-t', duration.toString(),
           '-c:v', 'libx264',
-          '-preset', encodingParams.preset,
-          '-crf', encodingParams.crf.toString(),
+          '-preset', 'ultrafast', // Fastest possible
+          '-crf', '28', // Faster encoding
           '-c:a', 'aac',
-          '-b:a', '128k',
-          '-map_metadata', '-1', // No metadata
+          '-b:a', '96k', // Lower bitrate for speed
+          '-avoid_negative_ts', 'make_zero',
           '-y',
           segmentName
         ]);
         
-        segmentFiles.push(segmentName);
-      }
+        return segmentName;
+      });
       
-      updateProcessingStep('🔄 Naturally combining segments...');
+      // Wait for all extractions (should be very fast)
+      const segmentFiles = await Promise.all(extractPromises);
       
-      // Create concat file
+      updateProcessingStep('🔄 Smart combining...');
+      
+      // STEP 4: Ultra-fast concatenation
       const concatContent = segmentFiles.map(file => `file '${file}'`).join('\n');
-      await ffmpeg.writeFile('concat_list.txt', concatContent);
+      await ffmpeg.writeFile('list.txt', concatContent);
       
-      // Concatenate with clean metadata
       await ffmpeg.exec([
         '-f', 'concat',
         '-safe', '0',
-        '-i', 'concat_list.txt',
-        '-c', 'copy',
-        '-map_metadata', '-1',
+        '-i', 'list.txt',
+        '-c', 'copy', // No re-encoding for speed
+        '-avoid_negative_ts', 'make_zero',
         '-y',
-        'reshuffled_raw.mp4'
+        'combined.mp4'
       ]);
       
-      updateProcessingStep(`📱 Applying natural ${selectedPlatform} look...`);
+      updateProcessingStep(`🎨 Applying ${selectedPlatform} style...`);
       
-      // Apply natural-looking filters (very subtle)
-      const naturalAspectRatio = sanitizer.getNaturalAspectRatio(selectedPlatform, 720, 1280);
-      const naturalFilter = sanitizer.createNaturalFilter(selectedPlatform, naturalAspectRatio);
+      // STEP 5: Fast platform optimization
+      const aspectRatio = sanitizer.getNaturalAspectRatio(selectedPlatform, 720, 1280);
+      
+      // Simplified, fast filter
+      const fastFilter = strategy.aspectRatio === '9:16' ? 
+        'scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2:black,eq=contrast=1.05:saturation=1.05' :
+        strategy.aspectRatio === '4:5' ? 
+        'scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2:black,eq=contrast=1.05:saturation=1.05' :
+        'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:black,eq=contrast=1.05:saturation=1.05';
       
       // Generate natural filename
       const naturalFilename = sanitizer.generateNaturalFilename(selectedPlatform);
-      console.log('📱 Using natural filename pattern:', naturalFilename);
-      
-      // Final processing with completely sanitized metadata
-      const finalEncodingParams = sanitizer.getRandomizedEncodingParams();
       const deviceMeta = sanitizer.generateDeviceMetadata();
       
+      // STEP 6: Final processing with metadata sanitization (optimized)
       await ffmpeg.exec([
-        '-i', 'reshuffled_raw.mp4',
-        '-vf', naturalFilter,
+        '-i', 'combined.mp4',
+        '-vf', fastFilter,
         '-c:v', 'libx264',
-        '-preset', finalEncodingParams.preset,
-        '-crf', finalEncodingParams.crf.toString(),
+        '-preset', 'fast', // Good balance of speed and quality
+        '-crf', '23',
         '-c:a', 'aac',
         '-b:a', '128k',
         
-        // Completely strip and replace metadata
+        // Complete metadata sanitization
         '-map_metadata', '-1',
         '-map_chapters', '-1',
-        
-        // Add minimal, natural-looking metadata
         '-metadata', `creation_time=${deviceMeta.creationTime}`,
         '-metadata', 'title=',
         '-metadata', 'comment=',
         '-metadata', 'encoder=',
-        '-metadata', 'software=',
         
-        // Mobile-optimized settings
+        // Mobile optimization
         '-movflags', '+faststart',
         '-pix_fmt', 'yuv420p',
         '-profile:v', 'baseline',
         '-level', '3.0',
         
         '-y',
-        'final_sanitized.mp4'
+        'final.mp4'
       ]);
       
-      updateProcessingStep('🧹 Final sanitization and export...');
+      updateProcessingStep('📱 Finalizing...');
       
-      // Read the sanitized video
-      console.log('📤 Reading sanitized video...');
-      const data = await ffmpeg.readFile('final_sanitized.mp4');
+      // STEP 7: Read final video
+      const data = await ffmpeg.readFile('final.mp4');
       const processedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
       const processedVideoUrl = URL.createObjectURL(processedVideoBlob);
       
-      console.log('✅ Video processing completed with full sanitization!');
+      console.log('✅ Ultra-fast processing completed!');
       
       return {
         videoUrl: processedVideoUrl,
         videoBlob: processedVideoBlob,
-        segmentsReshuffled: segmentOrder.length,
+        segmentsReshuffled: keyMoments.length,
         originalDuration: videoDuration,
-        newDuration: segmentOrder.length * (videoDuration / segmentCount * 0.95),
-        optimizationsApplied: [`natural_${strategy.effects}`, 'metadata_sanitized', `aspect_ratio_${strategy.aspectRatio}`],
+        newDuration: targetDuration,
+        optimizationsApplied: [`fast_${strategy.effects}`, 'metadata_sanitized', `${strategy.aspectRatio}_optimized`],
         naturalFilename: naturalFilename,
         deviceMetadata: deviceMeta
       };
       
     } catch (error) {
-      console.error('❌ Video processing failed:', error);
-      throw new Error(`Video processing failed: ${error.message}`);
+      console.error('❌ Processing failed:', error);
+      
+      // FALLBACK: If processing fails, try minimal processing
+      try {
+        updateProcessingStep('🔄 Trying fallback method...');
+        
+        const naturalFilename = sanitizer.generateNaturalFilename(selectedPlatform);
+        const deviceMeta = sanitizer.generateDeviceMetadata();
+        
+        // Minimal processing - just sanitize metadata and optimize
+        await ffmpeg.exec([
+          '-i', 'input.mp4',
+          '-c:v', 'libx264',
+          '-preset', 'ultrafast',
+          '-crf', '28',
+          '-c:a', 'aac',
+          '-b:a', '96k',
+          '-map_metadata', '-1',
+          '-metadata', `creation_time=${deviceMeta.creationTime}`,
+          '-movflags', '+faststart',
+          '-y',
+          'fallback.mp4'
+        ]);
+        
+        const data = await ffmpeg.readFile('fallback.mp4');
+        const processedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
+        const processedVideoUrl = URL.createObjectURL(processedVideoBlob);
+        
+        console.log('✅ Fallback processing completed');
+        
+        return {
+          videoUrl: processedVideoUrl,
+          videoBlob: processedVideoBlob,
+          segmentsReshuffled: 1,
+          originalDuration: videoDuration,
+          newDuration: videoDuration,
+          optimizationsApplied: ['metadata_sanitized', 'fallback_mode'],
+          naturalFilename: naturalFilename,
+          deviceMetadata: deviceMeta
+        };
+        
+      } catch (fallbackError) {
+        console.error('❌ Fallback also failed:', fallbackError);
+        throw new Error(`Processing failed: ${error.message || error}. Fallback failed: ${fallbackError.message || fallbackError}`);
+      }
     }
   };
 
