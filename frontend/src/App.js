@@ -3,6 +3,7 @@ import './App.css';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import BackgroundProcessingManager from './BackgroundProcessingManager';
+import MetadataSanitizer from './MetadataSanitizer';
 
 const OPENROUTER_API_KEY = process.env.REACT_APP_OPENROUTER_API_KEY;
 
