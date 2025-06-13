@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './App.css';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import BackgroundProcessingManager from './BackgroundProcessingManager';
 
 const OPENROUTER_API_KEY = process.env.REACT_APP_OPENROUTER_API_KEY;
 
@@ -17,10 +18,27 @@ function App() {
   const [algorithmicScore, setAlgorithmicScore] = useState(0);
   const [optimizationLevel, setOptimizationLevel] = useState('aggressive');
   const [processingProgress, setProcessingProgress] = useState(0);
+  const [backgroundProcessingEnabled, setBackgroundProcessingEnabled] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const ffmpegRef = useRef(new FFmpeg());
   const [ffmpegLoaded, setFFmpegLoaded] = useState(false);
+  const backgroundManagerRef = useRef(null);
+
+  // Initialize Background Processing Manager
+  useEffect(() => {
+    backgroundManagerRef.current = new BackgroundProcessingManager();
+    
+    // Check if background processing is supported
+    const isSupported = 'serviceWorker' in navigator && 'Notification' in window;
+    setBackgroundProcessingEnabled(isSupported);
+    
+    if (isSupported) {
+      console.log('🚀 Background processing enabled');
+    } else {
+      console.log('⚠️ Background processing not supported in this browser');
+    }
+  }, []);
 
   // Initialize FFmpeg
   useEffect(() => {
