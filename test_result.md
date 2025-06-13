@@ -132,7 +132,7 @@ backend:
         agent: "testing"
         comment: "Successfully tested POST /api/status endpoint. Created a new status check with a unique ID and timestamp."
 
-  - task: "Status Check Retrieval"
+  - task: "MongoDB Connection"
     implemented: true
     working: true
     file: "/app/backend/server.py"
@@ -142,7 +142,31 @@ backend:
     status_history:
       - working: true
         agent: "testing"
-        comment: "Successfully tested GET /api/status endpoint. Retrieved a list of status checks including the newly created one."
+        comment: "Successfully tested MongoDB connection. Created and retrieved status checks from the database. Connection to MongoDB is working properly."
+
+  - task: "Environment Variables"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Verified that MONGO_URL and DB_NAME environment variables are properly configured and being used in the application."
+
+  - task: "CORS Configuration"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Tested CORS configuration with preflight requests. CORS is properly configured to allow requests from any origin."
 
 frontend:
   - task: "Ultra-Fast Processing Optimization"
