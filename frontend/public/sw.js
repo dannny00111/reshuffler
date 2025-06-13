@@ -36,7 +36,7 @@ function handleProcessingUpdate(data) {
   
   // Show notification for major progress updates
   if (progress % 25 === 0 || progress >= 90) {
-    self.registration.showNotification('🎬 Video Processing', {
+    self.registration.showNotification('⚡ AyoRecuts Processing', {
       body: `${step} - ${progress}% complete`,
       icon: '/favicon.ico',
       badge: '/favicon.ico',
@@ -62,7 +62,7 @@ function handleProcessingComplete(data) {
   const { platform, algorithmScore, duration } = data;
   
   self.registration.showNotification('✅ Video Ready!', {
-    body: `Your ${platform} video is processed! Algorithm score: ${algorithmScore}/100`,
+    body: `Your ${platform} video is ready! AyoRecuts score: ${algorithmScore}/100`,
     icon: '/favicon.ico',
     badge: '/favicon.ico',
     tag: 'video-complete',
