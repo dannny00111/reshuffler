@@ -59,10 +59,65 @@
   --space-12: 3rem;
 }
 
+/* Theme Support */
+[data-theme="light"] {
+  --bg-primary: var(--tan-lightest);
+  --bg-secondary: var(--tan-light);
+  --bg-surface: white;
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --border-color: var(--tan-medium);
+  --accent-primary: var(--tan-deep);
+  --accent-secondary: var(--tan-warm);
+}
+
+[data-theme="dark"] {
+  --bg-primary: var(--dark-base);
+  --bg-secondary: var(--dark-surface);
+  --bg-surface: #2a2a2a;
+  --text-primary: #f7fafc;
+  --text-secondary: #e2e8f0;
+  --text-muted: #a0aec0;
+  --border-color: var(--dark-border);
+  --accent-primary: var(--tan-neutral);
+  --accent-secondary: var(--tan-medium);
+}
+
+/* Auto-detect system preference */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg-primary: var(--dark-base);
+    --bg-secondary: var(--dark-surface);
+    --bg-surface: #2a2a2a;
+    --text-primary: #f7fafc;
+    --text-secondary: #e2e8f0;
+    --text-muted: #a0aec0;
+    --border-color: var(--dark-border);
+    --accent-primary: var(--tan-neutral);
+    --accent-secondary: var(--tan-medium);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg-primary: var(--tan-lightest);
+    --bg-secondary: var(--tan-light);
+    --bg-surface: white;
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --border-color: var(--tan-medium);
+    --accent-primary: var(--tan-deep);
+    --accent-secondary: var(--tan-warm);
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body {
@@ -70,8 +125,68 @@ body {
   font-feature-settings: 'cv11', 'ss01';
   font-variation-settings: 'opsz' 32;
   overflow-x: hidden;
-  background: var(--gradient-warm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Typography System */
+.heading-primary {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary);
+  background: var(--gradient-warm);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+}
+
+.heading-secondary {
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.text-body {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  top: var(--space-4);
+  right: var(--space-4);
+  z-index: 1000;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-primary);
 }
 
 /* Advanced Glassmorphism - Brown Theme */
