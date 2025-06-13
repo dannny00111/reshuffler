@@ -278,7 +278,7 @@ Generate JSON with these fields:
       segmentOrder = segmentOrder.slice(0, maxSegments);
       
       console.log('📋 Segment order:', segmentOrder);
-      setProcessingStep(`🎬 Extracting and reshuffling ${segmentOrder.length} key segments...`);
+      updateProcessingStep(`🎬 Extracting and reshuffling ${segmentOrder.length} key segments...`);
       
       // Extract segments
       const segmentFiles = [];
