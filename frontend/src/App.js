@@ -583,13 +583,13 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
       {/* Header */}
       <div className="relative z-10 pt-8 pb-6 text-center">
         <h1 className="text-4xl md:text-7xl font-bold text-white mb-2 animate-pulse-slow">
-          ✂️ VIRAL VIDEO RESHUFFLER
+          ✂️ AYORECUTS
         </h1>
         <p className="text-xl md:text-2xl text-purple-200 mb-2">
-          ACTUAL Video Segment Reshuffling + Viral Optimization
+          Lightning-Fast Video Editing + Viral Optimization
         </p>
         <div className="text-sm text-purple-300 mb-6">
-          🎬 Real FFmpeg Processing • ✂️ Segment Reordering • 🔥 Platform Effects • ⚡ Algorithm Hacks
+          🚀 Ultra-Fast Processing • ✂️ Smart Editing • 🔥 Viral-Ready • ⚡ Algorithm-Safe
         </div>
         
         {/* FFmpeg Status */}
