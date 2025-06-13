@@ -304,7 +304,7 @@ Generate JSON with these fields:
         segmentFiles.push(segmentName);
       }
       
-      setProcessingStep('🔄 Combining reshuffled segments...');
+      updateProcessingStep('🔄 Combining reshuffled segments...');
       
       // Create concat file
       const concatContent = segmentFiles.map(file => `file '${file}'`).join('\n');
