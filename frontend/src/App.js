@@ -657,6 +657,7 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                 <div>✂️ Segment Reshuffling</div>
                 <div>🎨 Platform Effects</div>
                 <div>📐 Aspect Ratio Fix</div>
+                <div>🔒 Metadata Sanitization</div>
                 {backgroundProcessingEnabled && <div>📱 Background Processing</div>}
               </div>
             </div>
