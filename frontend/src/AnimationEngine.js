@@ -1,4 +1,4 @@
-import anime from 'animejs';
+import * as anime from 'animejs';
 
 class AnimationEngine {
   constructor() {

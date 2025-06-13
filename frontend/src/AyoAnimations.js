@@ -1,5 +1,5 @@
 // Advanced Animation and Haptics System for AyoRecuts
-import anime from 'animejs';
+import * as anime from 'animejs';
 import { gsap } from 'gsap';
 
 class AyoAnimations {
