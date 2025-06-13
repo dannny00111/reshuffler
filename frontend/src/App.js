@@ -781,6 +781,8 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                   <div>✂️ Segments Reshuffled: {processedVideo.segmentsReshuffled}</div>
                   <div>🎨 Effects Applied: {processedVideo.optimizationsApplied.join(', ')}</div>
                   <div>🎯 Platform: {processedVideo.platform}</div>
+                  <div>🔒 Metadata: SANITIZED</div>
+                  <div>📱 Filename: {processedVideo.naturalFilename}</div>
                 </div>
               </div>
 
