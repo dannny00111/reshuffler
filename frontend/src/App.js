@@ -197,135 +197,165 @@ Generate JSON with these fields:
     const ffmpeg = ffmpegRef.current;
     const strategy = platformStrategies[selectedPlatform];
     
-    setProcessingStep('📁 Loading video into FFmpeg...');
+    console.log('🎬 Starting video processing with strategy:', strategy);
+    setProcessingStep('📁 Preparing video for processing...');
     
-    // Write input file
-    await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
-    
-    // Calculate segments for reshuffling
-    const targetDuration = strategy.optimalDuration;
-    const segmentCount = Math.min(6, Math.floor(videoDuration / 2));
-    const segmentDuration = videoDuration / segmentCount;
-    
-    setProcessingStep('✂️ Analyzing and cutting video segments...');
-    
-    // Create segment list based on platform strategy
-    let segmentOrder = [];
-    
-    switch (strategy.segmentStrategy) {
-      case 'hook-heavy': // TikTok - Start with most engaging parts
-        segmentOrder = [0, Math.floor(segmentCount * 0.7), Math.floor(segmentCount * 0.3), Math.floor(segmentCount * 0.5)];
-        break;
-      case 'story-driven': // Instagram - Maintain some narrative
-        segmentOrder = [0, Math.floor(segmentCount * 0.2), Math.floor(segmentCount * 0.6), Math.floor(segmentCount * 0.8)];
-        break;
-      case 'retention-focused': // YouTube - Build engagement
-        segmentOrder = [0, Math.floor(segmentCount * 0.4), Math.floor(segmentCount * 0.1), Math.floor(segmentCount * 0.7)];
-        break;
-      case 'controversy-light': // Twitter - Quick impact
-        segmentOrder = [Math.floor(segmentCount * 0.3), 0];
-        break;
-    }
-    
-    // Limit segments to fit target duration
-    const maxSegments = Math.floor(targetDuration / (segmentDuration * 0.8));
-    segmentOrder = segmentOrder.slice(0, maxSegments);
-    
-    setProcessingStep('🎬 Reshuffling video segments...');
-    
-    // Extract segments
-    const segmentFiles = [];
-    for (let i = 0; i < segmentOrder.length; i++) {
-      const segmentIndex = segmentOrder[i];
-      const startTime = segmentIndex * segmentDuration;
-      const duration = Math.min(segmentDuration * 0.8, targetDuration / segmentOrder.length);
+    try {
+      // Write input file
+      console.log('📁 Loading video file into FFmpeg...');
+      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
       
-      const segmentName = `segment_${i}.mp4`;
+      // Get video info first
+      console.log('📊 Getting video information...');
+      await ffmpeg.exec(['-i', 'input.mp4']);
       
+      // Calculate segments for reshuffling
+      const targetDuration = strategy.optimalDuration;
+      const segmentCount = Math.max(2, Math.min(6, Math.floor(videoDuration / 2)));
+      const segmentDuration = videoDuration / segmentCount;
+      
+      console.log(`📐 Video info: ${videoDuration}s total, ${segmentCount} segments of ${segmentDuration}s each`);
+      setProcessingStep(`✂️ Creating ${segmentCount} segments for reshuffling...`);
+      
+      // Create segment list based on platform strategy
+      let segmentOrder = [];
+      
+      switch (strategy.segmentStrategy) {
+        case 'hook-heavy': // TikTok - Start with most engaging parts
+          segmentOrder = [0, Math.floor(segmentCount * 0.7), Math.floor(segmentCount * 0.3)];
+          break;
+        case 'story-driven': // Instagram - Maintain some narrative
+          segmentOrder = [0, Math.floor(segmentCount * 0.2), Math.floor(segmentCount * 0.6)];
+          break;
+        case 'retention-focused': // YouTube - Build engagement
+          segmentOrder = [0, Math.floor(segmentCount * 0.4), Math.floor(segmentCount * 0.1)];
+          break;
+        case 'controversy-light': // Twitter - Quick impact
+          segmentOrder = [Math.floor(segmentCount * 0.3), 0];
+          break;
+        default:
+          segmentOrder = [0, 1];
+      }
+      
+      // Ensure we have valid segments and limit for target duration
+      segmentOrder = segmentOrder.filter(idx => idx < segmentCount);
+      const maxSegments = Math.max(2, Math.floor(targetDuration / (segmentDuration * 0.8)));
+      segmentOrder = segmentOrder.slice(0, maxSegments);
+      
+      console.log('📋 Segment order:', segmentOrder);
+      setProcessingStep(`🎬 Extracting and reshuffling ${segmentOrder.length} key segments...`);
+      
+      // Extract segments
+      const segmentFiles = [];
+      for (let i = 0; i < segmentOrder.length; i++) {
+        const segmentIndex = segmentOrder[i];
+        const startTime = segmentIndex * segmentDuration;
+        const duration = Math.min(segmentDuration * 0.9, targetDuration / segmentOrder.length);
+        
+        const segmentName = `segment_${i}.mp4`;
+        console.log(`✂️ Extracting segment ${i}: from ${startTime}s for ${duration}s`);
+        
+        await ffmpeg.exec([
+          '-i', 'input.mp4',
+          '-ss', startTime.toString(),
+          '-t', duration.toString(),
+          '-c:v', 'libx264',
+          '-c:a', 'aac',
+          '-preset', 'ultrafast',
+          '-y',
+          segmentName
+        ]);
+        
+        segmentFiles.push(segmentName);
+      }
+      
+      setProcessingStep('🔄 Combining reshuffled segments...');
+      
+      // Create concat file
+      const concatContent = segmentFiles.map(file => `file '${file}'`).join('\n');
+      await ffmpeg.writeFile('concat.txt', concatContent);
+      console.log('📝 Concat file created:', concatContent);
+      
+      // Concatenate segments
+      console.log('🔗 Concatenating segments...');
       await ffmpeg.exec([
-        '-i', 'input.mp4',
-        '-ss', startTime.toString(),
-        '-t', duration.toString(),
-        '-c:v', 'libx264',
-        '-c:a', 'aac',
+        '-f', 'concat',
+        '-safe', '0',
+        '-i', 'concat.txt',
+        '-c', 'copy',
         '-y',
-        segmentName
+        'reshuffled.mp4'
       ]);
       
-      segmentFiles.push(segmentName);
+      setProcessingStep(`⚡ Applying ${selectedPlatform} optimizations...`);
+      
+      // Apply platform-specific effects and optimizations
+      let filterComplex = '';
+      
+      switch (strategy.effects) {
+        case 'high_energy':
+          // TikTok - Increase saturation, contrast
+          filterComplex = 'eq=contrast=1.2:saturation=1.3:brightness=0.05';
+          break;
+        case 'aesthetic':
+          // Instagram - Smooth, cinematic
+          filterComplex = 'eq=contrast=1.1:saturation=1.2:gamma=0.95';
+          break;
+        case 'professional':
+          // YouTube - Clean, professional look
+          filterComplex = 'eq=contrast=1.05:saturation=1.1';
+          break;
+        case 'attention_grabbing':
+          // Twitter - High contrast, sharp
+          filterComplex = 'eq=contrast=1.3:saturation=1.4:brightness=0.1';
+          break;
+        default:
+          filterComplex = 'eq=contrast=1.1:saturation=1.1';
+      }
+      
+      // Apply aspect ratio and effects
+      const aspectRatioFilter = strategy.aspectRatio === '9:16' ? 'scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2:black' :
+                                strategy.aspectRatio === '4:5' ? 'scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2:black' :
+                                'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:black';
+      
+      const finalFilter = `${aspectRatioFilter},${filterComplex}`;
+      console.log('🎨 Applying final filter:', finalFilter);
+      
+      await ffmpeg.exec([
+        '-i', 'reshuffled.mp4',
+        '-vf', finalFilter,
+        '-c:v', 'libx264',
+        '-preset', 'fast',
+        '-crf', '23',
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        '-y',
+        'final_output.mp4'
+      ]);
+      
+      setProcessingStep('💾 Finalizing processed video...');
+      
+      // Read the processed video
+      console.log('📤 Reading processed video...');
+      const data = await ffmpeg.readFile('final_output.mp4');
+      const processedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
+      const processedVideoUrl = URL.createObjectURL(processedVideoBlob);
+      
+      console.log('✅ Video processing completed successfully!');
+      
+      return {
+        videoUrl: processedVideoUrl,
+        videoBlob: processedVideoBlob,
+        segmentsReshuffled: segmentOrder.length,
+        originalDuration: videoDuration,
+        newDuration: segmentOrder.length * (videoDuration / segmentCount * 0.9),
+        optimizationsApplied: [strategy.effects, strategy.cuts, `aspect_ratio_${strategy.aspectRatio}`]
+      };
+      
+    } catch (error) {
+      console.error('❌ Video processing failed:', error);
+      throw new Error(`Video processing failed: ${error.message}`);
     }
-    
-    setProcessingStep('🔄 Concatenating reshuffled segments...');
-    
-    // Create concat file
-    const concatContent = segmentFiles.map(file => `file '${file}'`).join('\n');
-    await ffmpeg.writeFile('concat.txt', concatContent);
-    
-    // Concatenate segments
-    await ffmpeg.exec([
-      '-f', 'concat',
-      '-safe', '0',
-      '-i', 'concat.txt',
-      '-c', 'copy',
-      '-y',
-      'reshuffled.mp4'
-    ]);
-    
-    setProcessingStep('⚡ Applying platform-specific optimizations...');
-    
-    // Apply platform-specific effects and optimizations
-    let filterComplex = '';
-    let outputOptions = ['-c:v', 'libx264', '-crf', '23', '-c:a', 'aac'];
-    
-    switch (strategy.effects) {
-      case 'high_energy':
-        // TikTok - Increase saturation, contrast
-        filterComplex = 'eq=contrast=1.2:saturation=1.3:brightness=0.05';
-        break;
-      case 'aesthetic':
-        // Instagram - Smooth, cinematic
-        filterComplex = 'eq=contrast=1.1:saturation=1.2:gamma=0.95';
-        break;
-      case 'professional':
-        // YouTube - Clean, professional look
-        filterComplex = 'eq=contrast=1.05:saturation=1.1';
-        break;
-      case 'attention_grabbing':
-        // Twitter - High contrast, sharp
-        filterComplex = 'eq=contrast=1.3:saturation=1.4:brightness=0.1';
-        break;
-    }
-    
-    // Apply aspect ratio and effects
-    const aspectRatioFilter = strategy.aspectRatio === '9:16' ? 'scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2' :
-                              strategy.aspectRatio === '4:5' ? 'scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2' :
-                              'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2';
-    
-    const finalFilter = filterComplex ? `${aspectRatioFilter},${filterComplex}` : aspectRatioFilter;
-    
-    await ffmpeg.exec([
-      '-i', 'reshuffled.mp4',
-      '-vf', finalFilter,
-      ...outputOptions,
-      '-y',
-      'final_output.mp4'
-    ]);
-    
-    setProcessingStep('💾 Exporting optimized video...');
-    
-    // Read the processed video
-    const data = await ffmpeg.readFile('final_output.mp4');
-    const processedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
-    const processedVideoUrl = URL.createObjectURL(processedVideoBlob);
-    
-    return {
-      videoUrl: processedVideoUrl,
-      videoBlob: processedVideoBlob,
-      segmentsReshuffled: segmentOrder.length,
-      originalDuration: videoDuration,
-      newDuration: targetDuration,
-      optimizationsApplied: [strategy.effects, strategy.cuts, `aspect_ratio_${strategy.aspectRatio}`]
-    };
   };
 
   // Main processing function
