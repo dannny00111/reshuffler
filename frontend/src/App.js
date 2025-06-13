@@ -586,74 +586,61 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
   };
 
   return (
-    <div className="video-editor-container min-h-screen gradient-warm relative overflow-hidden">
-      {/* Advanced Floating Elements */}
+    <div className="min-h-screen bg-gradient-to-br from-tan-lightest to-tan-light relative">
+      <ThemeToggle />
+      
+      {/* Floating Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="floating-orb"></div>
         <div className="floating-orb"></div>
         <div className="floating-orb"></div>
-        <div className="floating-orb"></div>
-        <div className="liquid-bg"></div>
       </div>
 
-      {/* Professional Header */}
-      <div className="video-editor-header relative z-10 pt-8 pb-6 text-center">
+      {/* Modern Header */}
+      <header className="relative z-10 pt-12 pb-8 text-center">
         <h1 className="heading-primary mb-4 animate-on-scroll">
           ✂️ Ayo_ReCutz ✂️
         </h1>
-        <p className="text-xl md:text-2xl text-professional mb-2 animate-on-scroll">
-          Professional Video Editor • Viral Optimization Engine
+        <p className="heading-secondary mb-4 animate-on-scroll">
+          Professional Video Editor
         </p>
-        <div className="text-sm text-professional mb-6 animate-on-scroll">
-          🚀 Ultra-Fast Processing • ✂️ Smart Editing • 🔥 Viral-Ready • ⚡ Algorithm-Safe
-        </div>
+        <p className="text-body max-w-2xl mx-auto px-4 animate-on-scroll">
+          Advanced video optimization engine with smart editing and viral-ready output
+        </p>
         
-        {/* Enhanced Status Display */}
-        <div className="flex gap-4 items-center justify-center flex-wrap animate-on-scroll">
-          <div className={`status-badge ${ffmpegLoaded ? 'ready' : 'loading'}`}>
+        {/* Status Display */}
+        <div className="flex gap-4 items-center justify-center flex-wrap mt-6 animate-on-scroll">
+          <StatusBadge status={ffmpegLoaded ? 'ready' : 'loading'}>
             🛠️ Engine: {ffmpegLoaded ? 'Ready' : 'Loading...'}
-          </div>
+          </StatusBadge>
           
           {backgroundProcessingEnabled && (
-            <div className="status-badge ready">
-              📱 Background Mode: Enabled
-            </div>
+            <StatusBadge status="ready">
+              📱 Background Processing
+            </StatusBadge>
           )}
           
           {algorithmicScore > 0 && (
-            <div className="status-badge processing">
-              🧠 Algorithm Score: {algorithmicScore}/100
-            </div>
+            <StatusBadge status="processing">
+              🧠 Score: {algorithmicScore}/100
+            </StatusBadge>
           )}
         </div>
-        
-        {/* Advanced Score Display */}
-        {(algorithmicScore > 0 || viralMetadata) && (
-          <div className="flex justify-center gap-6 mt-6 animate-on-scroll">
-            {algorithmicScore > 0 && (
-              <div className="glass-metal px-6 py-3 rounded-full">
-                <span className="text-metal font-bold text-lg">🧠 Algorithm Score: {algorithmicScore}/100</span>
-              </div>
-            )}
-            {viralMetadata && (
-              <div className="glass-metal px-6 py-3 rounded-full">
-                <span className="text-metal font-bold text-lg">🔥 Viral Score: {viralMetadata.viral_score_prediction}%</span>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      </header>
 
-      <div className="relative z-10 container mx-auto px-4 max-w-7xl">
-        {/* Advanced Control Panel */}
-        <div className="control-panel animate-on-scroll">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <main className="relative z-10 container mx-auto px-4 max-w-6xl">
+        {/* Control Panel */}
+        <div className="glass-surface p-8 mb-8 animate-on-scroll">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Platform Selection */}
             <div className="space-y-4">
-              <label className="text-white font-bold text-lg block">🎯 Platform</label>
+              <Tooltip content="Choose your target social media platform for optimal video formatting">
+                <label className="text-body font-semibold block">🎯 Platform</label>
+              </Tooltip>
               <select
                 value={selectedPlatform}
                 onChange={(e) => setSelectedPlatform(e.target.value)}
-                className="w-full glass-dark border-0 rounded-xl px-6 py-4 text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                className="w-full glass-elevated border-0 rounded-lg px-4 py-3 text-body font-medium focus:outline-none focus:ring-2 focus:ring-tan-warm transition-all"
               >
                 <option value="TikTok">🎵 TikTok (15s, 9:16, Hook-Heavy)</option>
                 <option value="Instagram">📸 Instagram (30s, 4:5, Story-Driven)</option>
@@ -662,12 +649,15 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               </select>
             </div>
             
+            {/* Optimization Level */}
             <div className="space-y-4">
-              <label className="text-white font-bold text-lg block">⚡ Optimization</label>
+              <Tooltip content="Control the intensity of video optimization and effects">
+                <label className="text-body font-semibold block">⚡ Optimization</label>
+              </Tooltip>
               <select
                 value={optimizationLevel}
                 onChange={(e) => setOptimizationLevel(e.target.value)}
-                className="w-full glass-dark border-0 rounded-xl px-6 py-4 text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+                className="w-full glass-elevated border-0 rounded-lg px-4 py-3 text-body font-medium focus:outline-none focus:ring-2 focus:ring-tan-warm transition-all"
               >
                 <option value="mild">😊 Mild Enhancement</option>
                 <option value="balanced">⚖️ Balanced Processing</option>
@@ -675,58 +665,47 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               </select>
             </div>
             
+            {/* Features Overview */}
             <div className="space-y-4">
-              <label className="text-white font-bold text-lg block">🎬 Features</label>
-              <div className="glass-dark rounded-xl p-4 space-y-2 text-sm text-professional">
-                <div className="flex items-center gap-2">✂️ Segment Reshuffling</div>
-                <div className="flex items-center gap-2">🎨 Platform Effects</div>
-                <div className="flex items-center gap-2">📐 Aspect Ratio Fix</div>
-                <div className="flex items-center gap-2">🔒 Metadata Sanitization</div>
-                {backgroundProcessingEnabled && <div className="flex items-center gap-2">📱 Background Processing</div>}
+              <label className="text-body font-semibold block">🎬 Features</label>
+              <div className="flex flex-wrap gap-2">
+                <FeatureBadge icon="✂️" tooltip="Intelligently reorder video segments">
+                  Segment Editing
+                </FeatureBadge>
+                <FeatureBadge icon="🎨" tooltip="Apply platform-specific effects">
+                  Smart Effects
+                </FeatureBadge>
+                <FeatureBadge icon="📐" tooltip="Optimize aspect ratio for platform">
+                  Aspect Ratio
+                </FeatureBadge>
+                <FeatureBadge icon="🔒" tooltip="Remove identifying metadata">
+                  Privacy Safe
+                </FeatureBadge>
+                {backgroundProcessingEnabled && (
+                  <FeatureBadge icon="📱" tooltip="Continue processing in background">
+                    Background Mode
+                  </FeatureBadge>
+                )}
               </div>
-            </div>
-          </div>
-          
-          {/* Enhanced Information Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {backgroundProcessingEnabled && (
-              <div className="glass p-6 rounded-xl">
-                <div className="flex items-center gap-3 text-blue-300 mb-3">
-                  <span className="text-2xl">📱</span>
-                  <span className="font-bold text-lg">Background Processing</span>
-                </div>
-                <p className="text-professional">
-                  Switch to other tabs/apps while your video processes. Get real-time notifications about progress and completion!
-                </p>
-              </div>
-            )}
-            
-            <div className="glass p-6 rounded-xl">
-              <div className="flex items-center gap-3 text-green-300 mb-3">
-                <span className="text-2xl">🔒</span>
-                <span className="font-bold text-lg">Privacy Protected</span>
-              </div>
-              <p className="text-professional">
-                All metadata stripped and replaced with natural phone-like data. Your videos look like authentic mobile recordings to algorithms.
-              </p>
             </div>
           </div>
         </div>
 
-        {/* Professional Upload Area */}
-        <div 
-          className="upload-area p-12 text-center mb-8 animate-on-scroll card-hover"
+        {/* Upload Area */}
+        <Dropzone 
           onDrop={handleDrop}
           onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          isDragActive={isDragActive}
         >
           {!videoUrl ? (
-            <div>
-              <div className="text-8xl mb-6">🎬</div>
-              <h2 className="text-white text-3xl font-bold mb-4 text-glow">
+            <div className="animate-on-scroll">
+              <div className="dropzone-icon">🎬</div>
+              <h2 className="text-2xl font-bold text-primary mb-4">
                 Drop Video for Professional Processing
               </h2>
-              <p className="text-professional text-xl mb-8 max-w-2xl mx-auto">
-                Advanced FFmpeg engine will intelligently reshuffle your video segments for maximum viral potential
+              <p className="text-body mb-6 max-w-md mx-auto">
+                Advanced FFmpeg engine will intelligently optimize your video for maximum engagement
               </p>
               <input
                 type="file"
@@ -737,56 +716,55 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               />
               <label 
                 htmlFor="video-upload"
-                className="btn-primary text-white px-12 py-5 rounded-xl cursor-pointer inline-block font-bold text-xl transition-all duration-300 hover:scale-105"
+                className="btn btn-primary text-lg px-8 py-4 cursor-pointer"
               >
-                Select Professional Video
+                Select Video File
               </label>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-6 w-full">
               <video 
                 ref={videoRef}
                 src={videoUrl}
                 onLoadedMetadata={onVideoLoaded}
                 controls
-                className="max-w-full max-h-96 mx-auto rounded-xl shadow-2xl border-2 border-yellow-400/30"
+                className="max-w-full max-h-80 mx-auto rounded-lg shadow-lg border border-tan-medium"
               />
-              <div className="text-professional text-xl font-semibold">
-                📹 Original: {Math.round(videoDuration)}s → Target: {platformStrategies[selectedPlatform].optimalDuration}s | Platform: {selectedPlatform}
+              <div className="text-center">
+                <p className="text-body font-medium mb-4">
+                  📹 Duration: {Math.round(videoDuration)}s → Target: {platformStrategies[selectedPlatform].optimalDuration}s | Platform: {selectedPlatform}
+                </p>
+                <div className="flex gap-4 justify-center flex-wrap">
+                  <button
+                    onClick={() => setShowRemixPreview(true)}
+                    className="btn btn-secondary"
+                  >
+                    👁️ Preview Settings
+                  </button>
+                  <button
+                    onClick={optimizeVideo}
+                    disabled={isProcessing || !ffmpegLoaded}
+                    className="btn btn-primary disabled:opacity-50"
+                  >
+                    {isProcessing ? '✂️ Processing...' : '🚀 Optimize Video'}
+                  </button>
+                </div>
               </div>
-              <button
-                onClick={optimizeVideo}
-                disabled={isProcessing || !ffmpegLoaded}
-                className="btn-accent text-white px-12 py-5 rounded-xl font-bold text-xl disabled:opacity-50 transition-all duration-300 hover:scale-105"
-              >
-                {isProcessing ? '✂️ Processing Video...' : '🚀 OPTIMIZE VIDEO'}
-              </button>
             </div>
           )}
-        </div>
+        </Dropzone>
 
-        {/* Advanced Processing Status */}
+        {/* Processing Status */}
         {isProcessing && (
-          <div className="processing-status p-8 mb-8 text-center animate-on-scroll">
-            <div className="text-white text-2xl font-bold mb-6 text-glow">{processingStep}</div>
-            <div className="progress-bar w-full h-6 rounded-full mb-4 relative overflow-hidden">
-              <div 
-                className="progress-bar-fill transition-all duration-500" 
-                style={{width: `${processingProgress}%`}}
-              ></div>
-            </div>
-            <div className="text-professional text-lg mb-6">
-              Progress: {processingProgress}% - Advanced FFmpeg processing in action! ✂️
-            </div>
+          <div className="glass-surface p-8 mt-8 animate-on-scroll">
+            <h3 className="text-xl font-bold text-center mb-6">{processingStep}</h3>
+            <ProgressBar progress={processingProgress} label="Processing Progress" />
             
             {backgroundProcessingEnabled && (
-              <div className="glass p-6 rounded-xl max-w-md mx-auto">
-                <div className="text-blue-300 font-semibold flex items-center justify-center gap-3">
-                  <div className="spinner w-6 h-6"></div>
-                  <span>Background processing active - switch apps freely!</span>
-                </div>
-                <div className="text-blue-200 text-sm mt-2">
-                  You'll receive notifications about progress and completion
+              <div className="mt-6 p-4 glass-elevated rounded-lg">
+                <div className="flex items-center gap-3 text-center justify-center">
+                  <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="text-body">Background processing active - switch apps freely!</span>
                 </div>
               </div>
             )}
