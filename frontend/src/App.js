@@ -5,6 +5,7 @@ import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import BackgroundProcessingManager from './BackgroundProcessingManager';
 import MetadataSanitizer from './MetadataSanitizer';
 import AnimationEngine from './AnimationEngine';
+import { ThemeToggle, ProgressBar, FeatureBadge, Tooltip, Dropzone, StatusBadge } from './components/UIComponents';
 
 const OPENROUTER_API_KEY = process.env.REACT_APP_OPENROUTER_API_KEY;
 
@@ -21,6 +22,8 @@ function App() {
   const [optimizationLevel, setOptimizationLevel] = useState('aggressive');
   const [processingProgress, setProcessingProgress] = useState(0);
   const [backgroundProcessingEnabled, setBackgroundProcessingEnabled] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
+  const [showRemixPreview, setShowRemixPreview] = useState(false);
   
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -33,16 +36,13 @@ function App() {
   // Initialize Animation Engine
   useEffect(() => {
     const initAnimations = async () => {
-      // Small delay to ensure DOM is ready
       setTimeout(() => {
         animationEngineRef.current.init();
-        animationEngineRef.current.createLoadingAnimation();
       }, 500);
     };
     
     initAnimations();
     
-    // Cleanup on unmount
     return () => {
       if (animationEngineRef.current) {
         animationEngineRef.current.destroy();
@@ -54,7 +54,6 @@ function App() {
   useEffect(() => {
     backgroundManagerRef.current = new BackgroundProcessingManager();
     
-    // Check if background processing is supported
     const isSupported = 'serviceWorker' in navigator && 'Notification' in window;
     setBackgroundProcessingEnabled(isSupported);
     
