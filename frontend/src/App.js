@@ -225,7 +225,7 @@ Generate JSON with these fields:
     }
   };
 
-  // ACTUAL VIDEO PROCESSING WITH FFMPEG
+  // SANITIZED VIDEO PROCESSING WITH METADATA CLEANING
   const processVideoWithFFmpeg = async () => {
     if (!ffmpegLoaded || !videoFile) {
       throw new Error('FFmpeg not loaded or no video file');
@@ -233,72 +233,88 @@ Generate JSON with these fields:
 
     const ffmpeg = ffmpegRef.current;
     const strategy = platformStrategies[selectedPlatform];
+    const sanitizer = metadataSanitizerRef.current;
     
-    console.log('🎬 Starting video processing with strategy:', strategy);
-    updateProcessingStep('📁 Preparing video for processing...');
+    console.log('🎬 Starting SANITIZED video processing with strategy:', strategy);
+    updateProcessingStep('🔒 Preparing sanitized video processing...');
     
     try {
-      // Write input file
+      // Write input file with original name
       console.log('📁 Loading video file into FFmpeg...');
-      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
+      await ffmpeg.writeFile('original_input.mp4', await fetchFile(videoFile));
       
-      // Get video info first
+      // STEP 1: Create a clean intermediate file with no metadata
+      console.log('🧹 Sanitizing metadata...');
+      await ffmpeg.exec([
+        '-i', 'original_input.mp4',
+        '-map_metadata', '-1', // Strip all metadata
+        '-map_chapters', '-1',
+        '-c', 'copy',
+        '-y',
+        'clean_input.mp4'
+      ]);
+      
+      // Get video info from clean file
       console.log('📊 Getting video information...');
-      await ffmpeg.exec(['-i', 'input.mp4']);
+      await ffmpeg.exec(['-i', 'clean_input.mp4']);
       
       // Calculate segments for reshuffling
       const targetDuration = strategy.optimalDuration;
-      const segmentCount = Math.max(2, Math.min(6, Math.floor(videoDuration / 2)));
+      const segmentCount = Math.max(2, Math.min(4, Math.floor(videoDuration / 2))); // Fewer segments to look more natural
       const segmentDuration = videoDuration / segmentCount;
       
       console.log(`📐 Video info: ${videoDuration}s total, ${segmentCount} segments of ${segmentDuration}s each`);
-      updateProcessingStep(`✂️ Creating ${segmentCount} segments for reshuffling...`);
+      updateProcessingStep(`✂️ Creating ${segmentCount} natural segments...`);
       
-      // Create segment list based on platform strategy
+      // Create segment list based on platform strategy (simplified for naturalness)
       let segmentOrder = [];
       
       switch (strategy.segmentStrategy) {
-        case 'hook-heavy': // TikTok - Start with most engaging parts
-          segmentOrder = [0, Math.floor(segmentCount * 0.7), Math.floor(segmentCount * 0.3)];
+        case 'hook-heavy': // TikTok - Start strong
+          segmentOrder = [0, Math.floor(segmentCount * 0.6)];
           break;
-        case 'story-driven': // Instagram - Maintain some narrative
-          segmentOrder = [0, Math.floor(segmentCount * 0.2), Math.floor(segmentCount * 0.6)];
+        case 'story-driven': // Instagram - Keep flow
+          segmentOrder = [0, Math.floor(segmentCount * 0.3)];
           break;
-        case 'retention-focused': // YouTube - Build engagement
-          segmentOrder = [0, Math.floor(segmentCount * 0.4), Math.floor(segmentCount * 0.1)];
+        case 'retention-focused': // YouTube - Hook early
+          segmentOrder = [0, Math.floor(segmentCount * 0.4)];
           break;
         case 'controversy-light': // Twitter - Quick impact
-          segmentOrder = [Math.floor(segmentCount * 0.3), 0];
+          segmentOrder = [Math.floor(segmentCount * 0.2), 0];
           break;
         default:
           segmentOrder = [0, 1];
       }
       
-      // Ensure we have valid segments and limit for target duration
-      segmentOrder = segmentOrder.filter(idx => idx < segmentCount);
-      const maxSegments = Math.max(2, Math.floor(targetDuration / (segmentDuration * 0.8)));
-      segmentOrder = segmentOrder.slice(0, maxSegments);
+      // Ensure valid segments (max 2-3 for naturalness)
+      segmentOrder = segmentOrder.filter(idx => idx < segmentCount).slice(0, 3);
       
-      console.log('📋 Segment order:', segmentOrder);
-      updateProcessingStep(`🎬 Extracting and reshuffling ${segmentOrder.length} key segments...`);
+      console.log('📋 Natural segment order:', segmentOrder);
+      updateProcessingStep(`🎬 Extracting ${segmentOrder.length} key moments...`);
       
-      // Extract segments
+      // Extract segments with randomized encoding to avoid detection
+      const encodingParams = sanitizer.getRandomizedEncodingParams();
       const segmentFiles = [];
+      
       for (let i = 0; i < segmentOrder.length; i++) {
         const segmentIndex = segmentOrder[i];
         const startTime = segmentIndex * segmentDuration;
-        const duration = Math.min(segmentDuration * 0.9, targetDuration / segmentOrder.length);
+        const duration = Math.min(segmentDuration * 0.95, targetDuration / segmentOrder.length);
         
-        const segmentName = `segment_${i}.mp4`;
+        const segmentName = `seg_${i}.mp4`;
         console.log(`✂️ Extracting segment ${i}: from ${startTime}s for ${duration}s`);
         
+        // Use sanitized encoding
         await ffmpeg.exec([
-          '-i', 'input.mp4',
+          '-i', 'clean_input.mp4',
           '-ss', startTime.toString(),
           '-t', duration.toString(),
           '-c:v', 'libx264',
+          '-preset', encodingParams.preset,
+          '-crf', encodingParams.crf.toString(),
           '-c:a', 'aac',
-          '-preset', 'ultrafast',
+          '-b:a', '128k',
+          '-map_metadata', '-1', // No metadata
           '-y',
           segmentName
         ]);
@@ -306,87 +322,86 @@ Generate JSON with these fields:
         segmentFiles.push(segmentName);
       }
       
-      updateProcessingStep('🔄 Combining reshuffled segments...');
+      updateProcessingStep('🔄 Naturally combining segments...');
       
       // Create concat file
       const concatContent = segmentFiles.map(file => `file '${file}'`).join('\n');
-      await ffmpeg.writeFile('concat.txt', concatContent);
-      console.log('📝 Concat file created:', concatContent);
+      await ffmpeg.writeFile('concat_list.txt', concatContent);
       
-      // Concatenate segments
-      console.log('🔗 Concatenating segments...');
+      // Concatenate with clean metadata
       await ffmpeg.exec([
         '-f', 'concat',
         '-safe', '0',
-        '-i', 'concat.txt',
+        '-i', 'concat_list.txt',
         '-c', 'copy',
+        '-map_metadata', '-1',
         '-y',
-        'reshuffled.mp4'
+        'reshuffled_raw.mp4'
       ]);
       
-      updateProcessingStep(`⚡ Applying ${selectedPlatform} optimizations...`);
+      updateProcessingStep(`📱 Applying natural ${selectedPlatform} look...`);
       
-      // Apply platform-specific effects and optimizations
-      let filterComplex = '';
+      // Apply natural-looking filters (very subtle)
+      const naturalAspectRatio = sanitizer.getNaturalAspectRatio(selectedPlatform, 720, 1280);
+      const naturalFilter = sanitizer.createNaturalFilter(selectedPlatform, naturalAspectRatio);
       
-      switch (strategy.effects) {
-        case 'high_energy':
-          // TikTok - Increase saturation, contrast
-          filterComplex = 'eq=contrast=1.2:saturation=1.3:brightness=0.05';
-          break;
-        case 'aesthetic':
-          // Instagram - Smooth, cinematic
-          filterComplex = 'eq=contrast=1.1:saturation=1.2:gamma=0.95';
-          break;
-        case 'professional':
-          // YouTube - Clean, professional look
-          filterComplex = 'eq=contrast=1.05:saturation=1.1';
-          break;
-        case 'attention_grabbing':
-          // Twitter - High contrast, sharp
-          filterComplex = 'eq=contrast=1.3:saturation=1.4:brightness=0.1';
-          break;
-        default:
-          filterComplex = 'eq=contrast=1.1:saturation=1.1';
-      }
+      // Generate natural filename
+      const naturalFilename = sanitizer.generateNaturalFilename(selectedPlatform);
+      console.log('📱 Using natural filename pattern:', naturalFilename);
       
-      // Apply aspect ratio and effects
-      const aspectRatioFilter = strategy.aspectRatio === '9:16' ? 'scale=720:1280:force_original_aspect_ratio=decrease,pad=720:1280:(ow-iw)/2:(oh-ih)/2:black' :
-                                strategy.aspectRatio === '4:5' ? 'scale=720:900:force_original_aspect_ratio=decrease,pad=720:900:(ow-iw)/2:(oh-ih)/2:black' :
-                                'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2:black';
-      
-      const finalFilter = `${aspectRatioFilter},${filterComplex}`;
-      console.log('🎨 Applying final filter:', finalFilter);
+      // Final processing with completely sanitized metadata
+      const finalEncodingParams = sanitizer.getRandomizedEncodingParams();
+      const deviceMeta = sanitizer.generateDeviceMetadata();
       
       await ffmpeg.exec([
-        '-i', 'reshuffled.mp4',
-        '-vf', finalFilter,
+        '-i', 'reshuffled_raw.mp4',
+        '-vf', naturalFilter,
         '-c:v', 'libx264',
-        '-preset', 'fast',
-        '-crf', '23',
+        '-preset', finalEncodingParams.preset,
+        '-crf', finalEncodingParams.crf.toString(),
         '-c:a', 'aac',
         '-b:a', '128k',
+        
+        // Completely strip and replace metadata
+        '-map_metadata', '-1',
+        '-map_chapters', '-1',
+        
+        // Add minimal, natural-looking metadata
+        '-metadata', `creation_time=${deviceMeta.creationTime}`,
+        '-metadata', 'title=',
+        '-metadata', 'comment=',
+        '-metadata', 'encoder=',
+        '-metadata', 'software=',
+        
+        // Mobile-optimized settings
+        '-movflags', '+faststart',
+        '-pix_fmt', 'yuv420p',
+        '-profile:v', 'baseline',
+        '-level', '3.0',
+        
         '-y',
-        'final_output.mp4'
+        'final_sanitized.mp4'
       ]);
       
-      updateProcessingStep('💾 Finalizing processed video...');
+      updateProcessingStep('🧹 Final sanitization and export...');
       
-      // Read the processed video
-      console.log('📤 Reading processed video...');
-      const data = await ffmpeg.readFile('final_output.mp4');
+      // Read the sanitized video
+      console.log('📤 Reading sanitized video...');
+      const data = await ffmpeg.readFile('final_sanitized.mp4');
       const processedVideoBlob = new Blob([data.buffer], { type: 'video/mp4' });
       const processedVideoUrl = URL.createObjectURL(processedVideoBlob);
       
-      console.log('✅ Video processing completed successfully!');
+      console.log('✅ Video processing completed with full sanitization!');
       
       return {
         videoUrl: processedVideoUrl,
         videoBlob: processedVideoBlob,
         segmentsReshuffled: segmentOrder.length,
         originalDuration: videoDuration,
-        newDuration: segmentOrder.length * (videoDuration / segmentCount * 0.9),
-        optimizationsApplied: [strategy.effects, strategy.cuts, `aspect_ratio_${strategy.aspectRatio}`]
+        newDuration: segmentOrder.length * (videoDuration / segmentCount * 0.95),
+        optimizationsApplied: [`natural_${strategy.effects}`, 'metadata_sanitized', `aspect_ratio_${strategy.aspectRatio}`],
+        naturalFilename: naturalFilename,
+        deviceMetadata: deviceMeta
       };
       
     } catch (error) {
