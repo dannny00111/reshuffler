@@ -701,7 +701,19 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
                 style={{width: `${processingProgress}%`}}
               ></div>
             </div>
-            <div className="text-purple-300">Progress: {processingProgress}% - FFmpeg is actually reshuffling your video! ✂️</div>
+            <div className="text-purple-300 mb-4">Progress: {processingProgress}% - FFmpeg is actually reshuffling your video! ✂️</div>
+            
+            {backgroundProcessingEnabled && (
+              <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                <div className="text-blue-300 text-sm flex items-center justify-center gap-2">
+                  <span className="animate-pulse">📱</span>
+                  <span>You can switch to other tabs/apps - processing continues in background!</span>
+                </div>
+                <div className="text-blue-200 text-xs mt-1">
+                  You'll get notifications about progress and completion
+                </div>
+              </div>
+            )}
           </div>
         )}
 
