@@ -29,22 +29,25 @@ function App() {
       const ffmpeg = ffmpegRef.current;
       
       ffmpeg.on('log', ({ message }) => {
-        console.log(message);
+        console.log('FFmpeg log:', message);
       });
       
       ffmpeg.on('progress', ({ progress }) => {
+        console.log('FFmpeg progress:', progress);
         setProcessingProgress(Math.round(progress * 100));
       });
 
       try {
+        console.log('Loading FFmpeg...');
         await ffmpeg.load({
           coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
           wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
         });
         setFFmpegLoaded(true);
-        console.log('FFmpeg loaded successfully');
+        console.log('✅ FFmpeg loaded successfully');
       } catch (error) {
-        console.error('FFmpeg failed to load:', error);
+        console.error('❌ FFmpeg failed to load:', error);
+        alert('FFmpeg failed to load. Please refresh the page and try again.');
       }
     };
     loadFFmpeg();
