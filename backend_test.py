@@ -5,7 +5,12 @@ import sys
 from datetime import datetime
 
 # Get the backend URL from the frontend .env file
-BACKEND_URL = "http://localhost:8001"
+import os
+from dotenv import load_dotenv
+
+# Load the frontend .env file to get the backend URL
+load_dotenv("/app/frontend/.env")
+BACKEND_URL = os.environ.get("REACT_APP_BACKEND_URL", "http://localhost:8001")
 
 def test_root_endpoint():
     """Test the root endpoint to verify the backend is running."""
