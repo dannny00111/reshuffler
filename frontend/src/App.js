@@ -580,63 +580,74 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-full animate-spin-slow"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-l from-pink-500/10 to-purple-500/10 rounded-full animate-spin-reverse"></div>
+    <div className="video-editor-container min-h-screen gradient-warm relative overflow-hidden">
+      {/* Advanced Floating Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="floating-orb"></div>
+        <div className="floating-orb"></div>
+        <div className="floating-orb"></div>
+        <div className="floating-orb"></div>
+        <div className="liquid-bg"></div>
       </div>
 
-      {/* Header */}
-      <div className="relative z-10 pt-8 pb-6 text-center">
-        <h1 className="text-4xl md:text-7xl font-bold text-white mb-2 animate-pulse-slow">
-          ✂️ AYORECUTS
+      {/* Professional Header */}
+      <div className="video-editor-header relative z-10 pt-8 pb-6 text-center">
+        <h1 className="heading-primary mb-4 animate-on-scroll">
+          ✂️ Ayo_ReCutz ✂️
         </h1>
-        <p className="text-xl md:text-2xl text-purple-200 mb-2">
-          Lightning-Fast Video Editing + Viral Optimization
+        <p className="text-xl md:text-2xl text-professional mb-2 animate-on-scroll">
+          Professional Video Editor • Viral Optimization Engine
         </p>
-        <div className="text-sm text-purple-300 mb-6">
+        <div className="text-sm text-professional mb-6 animate-on-scroll">
           🚀 Ultra-Fast Processing • ✂️ Smart Editing • 🔥 Viral-Ready • ⚡ Algorithm-Safe
         </div>
         
-        {/* FFmpeg Status */}
-        <div className="flex gap-4 items-center justify-center">
-          <div className={`inline-block px-4 py-2 rounded-full text-sm font-bold ${ffmpegLoaded ? 'bg-green-500/20 text-green-300' : 'bg-yellow-500/20 text-yellow-300'}`}>
+        {/* Enhanced Status Display */}
+        <div className="flex gap-4 items-center justify-center flex-wrap animate-on-scroll">
+          <div className={`status-badge ${ffmpegLoaded ? 'ready' : 'loading'}`}>
             🛠️ Engine: {ffmpegLoaded ? 'Ready' : 'Loading...'}
           </div>
           
           {backgroundProcessingEnabled && (
-            <div className="inline-block px-4 py-2 rounded-full text-sm font-bold bg-blue-500/20 text-blue-300">
+            <div className="status-badge ready">
               📱 Background Mode: Enabled
+            </div>
+          )}
+          
+          {algorithmicScore > 0 && (
+            <div className="status-badge processing">
+              🧠 Algorithm Score: {algorithmicScore}/100
             </div>
           )}
         </div>
         
-        {/* Score Display */}
-        {algorithmicScore > 0 && (
-          <div className="flex justify-center gap-4 mt-4">
-            <div className="bg-gradient-to-r from-green-500 to-blue-500 px-4 py-2 rounded-full">
-              <span className="text-white font-bold">🧠 Algorithm Score: {algorithmicScore}/100</span>
-            </div>
+        {/* Advanced Score Display */}
+        {(algorithmicScore > 0 || viralMetadata) && (
+          <div className="flex justify-center gap-6 mt-6 animate-on-scroll">
+            {algorithmicScore > 0 && (
+              <div className="glass-metal px-6 py-3 rounded-full">
+                <span className="text-metal font-bold text-lg">🧠 Algorithm Score: {algorithmicScore}/100</span>
+              </div>
+            )}
             {viralMetadata && (
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-full">
-                <span className="text-white font-bold">🔥 Viral Score: {viralMetadata.viral_score_prediction}%</span>
+              <div className="glass-metal px-6 py-3 rounded-full">
+                <span className="text-metal font-bold text-lg">🔥 Viral Score: {viralMetadata.viral_score_prediction}%</span>
               </div>
             )}
           </div>
         )}
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 max-w-6xl">
-        {/* Control Panel */}
-        <div className="bg-black/20 backdrop-blur-sm rounded-lg p-6 mb-6 border border-purple-500/30">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="text-white font-bold mb-3 block">🎯 Platform</label>
+      <div className="relative z-10 container mx-auto px-4 max-w-7xl">
+        {/* Advanced Control Panel */}
+        <div className="control-panel animate-on-scroll">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-4">
+              <label className="text-white font-bold text-lg block">🎯 Platform</label>
               <select
                 value={selectedPlatform}
                 onChange={(e) => setSelectedPlatform(e.target.value)}
-                className="w-full bg-black/40 border border-purple-500/30 rounded-lg px-4 py-3 text-white text-lg"
+                className="w-full glass-dark border-0 rounded-xl px-6 py-4 text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
               >
                 <option value="TikTok">🎵 TikTok (15s, 9:16, Hook-Heavy)</option>
                 <option value="Instagram">📸 Instagram (30s, 4:5, Story-Driven)</option>
@@ -645,45 +656,53 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
               </select>
             </div>
             
-            <div>
-              <label className="text-white font-bold mb-3 block">⚡ Optimization</label>
+            <div className="space-y-4">
+              <label className="text-white font-bold text-lg block">⚡ Optimization</label>
               <select
                 value={optimizationLevel}
                 onChange={(e) => setOptimizationLevel(e.target.value)}
-                className="w-full bg-black/40 border border-purple-500/30 rounded-lg px-4 py-3 text-white text-lg"
+                className="w-full glass-dark border-0 rounded-xl px-6 py-4 text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
               >
-                <option value="mild">😊 Mild</option>
-                <option value="balanced">⚖️ Balanced</option>
-                <option value="aggressive">🚀 Aggressive</option>
+                <option value="mild">😊 Mild Enhancement</option>
+                <option value="balanced">⚖️ Balanced Processing</option>
+                <option value="aggressive">🚀 Aggressive Optimization</option>
               </select>
             </div>
             
-            <div>
-              <label className="text-white font-bold mb-3 block">🎬 Features</label>
-              <div className="bg-black/30 rounded-lg p-3 text-sm text-purple-200">
-                <div>✂️ Segment Reshuffling</div>
-                <div>🎨 Platform Effects</div>
-                <div>📐 Aspect Ratio Fix</div>
-                <div>🔒 Metadata Sanitization</div>
-                {backgroundProcessingEnabled && <div>📱 Background Processing</div>}
+            <div className="space-y-4">
+              <label className="text-white font-bold text-lg block">🎬 Features</label>
+              <div className="glass-dark rounded-xl p-4 space-y-2 text-sm text-professional">
+                <div className="flex items-center gap-2">✂️ Segment Reshuffling</div>
+                <div className="flex items-center gap-2">🎨 Platform Effects</div>
+                <div className="flex items-center gap-2">📐 Aspect Ratio Fix</div>
+                <div className="flex items-center gap-2">🔒 Metadata Sanitization</div>
+                {backgroundProcessingEnabled && <div className="flex items-center gap-2">📱 Background Processing</div>}
               </div>
             </div>
           </div>
           
-          {backgroundProcessingEnabled && (
-            <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-300 text-sm">
-                <span className="text-lg">📱</span>
-                <span><strong>Background Processing Enabled:</strong> You can switch to other tabs/apps while your video processes. You'll get notifications about progress and completion!</span>
+          {/* Enhanced Information Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            {backgroundProcessingEnabled && (
+              <div className="glass p-6 rounded-xl">
+                <div className="flex items-center gap-3 text-blue-300 mb-3">
+                  <span className="text-2xl">📱</span>
+                  <span className="font-bold text-lg">Background Processing</span>
+                </div>
+                <p className="text-professional">
+                  Switch to other tabs/apps while your video processes. Get real-time notifications about progress and completion!
+                </p>
               </div>
-            </div>
-          )}
-          
-          {/* Sanitization Notice */}
-          <div className="mt-4 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
-            <div className="flex items-center gap-2 text-green-300 text-sm">
-              <span className="text-lg">🔒</span>
-              <span><strong>Privacy Protected:</strong> All identifying metadata is stripped and replaced with natural phone-like data. Your videos will look like authentic mobile recordings to algorithms.</span>
+            )}
+            
+            <div className="glass p-6 rounded-xl">
+              <div className="flex items-center gap-3 text-green-300 mb-3">
+                <span className="text-2xl">🔒</span>
+                <span className="font-bold text-lg">Privacy Protected</span>
+              </div>
+              <p className="text-professional">
+                All metadata stripped and replaced with natural phone-like data. Your videos look like authentic mobile recordings to algorithms.
+              </p>
             </div>
           </div>
         </div>
