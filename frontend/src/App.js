@@ -623,15 +623,24 @@ ${processedVideo.metadata.algorithm_hacks.join(', ')}
             </div>
             
             <div>
-              <label className="text-white font-bold mb-3 block">🎬 Processing</label>
+              <label className="text-white font-bold mb-3 block">🎬 Features</label>
               <div className="bg-black/30 rounded-lg p-3 text-sm text-purple-200">
                 <div>✂️ Segment Reshuffling</div>
                 <div>🎨 Platform Effects</div>
                 <div>📐 Aspect Ratio Fix</div>
-                <div>⚡ Algorithm Hacks</div>
+                {backgroundProcessingEnabled && <div>📱 Background Processing</div>}
               </div>
             </div>
           </div>
+          
+          {backgroundProcessingEnabled && (
+            <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+              <div className="flex items-center gap-2 text-blue-300 text-sm">
+                <span className="text-lg">📱</span>
+                <span><strong>Background Processing Enabled:</strong> You can switch to other tabs/apps while your video processes. You'll get notifications about progress and completion!</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Upload Area */}
