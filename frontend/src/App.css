@@ -263,13 +263,16 @@ body {
   overflow: hidden;
 }
 
-/* Progress bar enhancements */
+/* Advanced Progress Bar */
 .progress-bar {
   position: relative;
   overflow: hidden;
+  background: rgba(93, 47, 10, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(139, 69, 19, 0.3);
 }
 
-.progress-bar::after {
+.progress-bar::before {
   content: '';
   position: absolute;
   top: 0;
@@ -278,10 +281,51 @@ body {
   bottom: 0;
   background: linear-gradient(90deg, 
     transparent 0%, 
-    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 215, 0, 0.6) 50%, 
     transparent 100%);
   transform: translateX(-100%);
   animation: shimmer 2s infinite;
+  z-index: 2;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--gradient-secondary);
+  border-radius: inherit;
+  position: relative;
+  overflow: hidden;
+  animation: liquidProgress 1s ease-out;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 255, 0.2) 25%, 
+    transparent 25%, 
+    transparent 75%, 
+    rgba(255, 255, 255, 0.2) 75%);
+  background-size: 20px 20px;
+  animation: stripes 1s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes liquidProgress {
+  0% { width: 0%; }
+  100% { width: var(--progress-width, 0%); }
+}
+
+@keyframes stripes {
+  0% { background-position: 0 0; }
+  100% { background-position: 20px 0; }
 }
 
 /* Card hover effects */
