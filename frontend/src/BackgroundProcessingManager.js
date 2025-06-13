@@ -78,16 +78,24 @@ class BackgroundProcessingManager {
     this.processingCallbacks.set('current', callbacks);
     
     // Update page title to show processing status
-    this.updatePageTitle(`🎬 Processing ${platform} video...`);
+    this.updatePageTitle(`⚡ AyoRecuts - Processing ${platform}...`);
     
     // Show initial notification
     this.sendNotification('PROCESSING_UPDATE', {
-      step: 'Starting video processing...',
+      step: 'Starting ultra-fast processing...',
       progress: 0,
       platform
     });
 
     console.log('🚀 Background processing started for', platform);
+    
+    // Keep page alive during processing
+    if (typeof window !== 'undefined') {
+      this.keepAlive = setInterval(() => {
+        // Ping to keep background processing active
+        console.log('📱 Background processing active...');
+      }, 5000);
+    }
   }
 
   updateProgress(step, progress, platform) {
