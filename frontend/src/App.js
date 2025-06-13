@@ -52,7 +52,24 @@ function App() {
       
       ffmpeg.on('progress', ({ progress }) => {
         console.log('FFmpeg progress:', progress);
-        setProcessingProgress(Math.round(progress * 100));
+        const progressPercent = Math.round(progress * 100);
+        setProcessingProgress(progressPercent);
+        
+        // Update background processing progress
+        if (backgroundManagerRef.current && isProcessing) {
+          backgroundManagerRef.current.updateProgress(
+            processingStep,
+            progressPercent,
+            selectedPlatform
+          );
+          
+          // Update Dynamic Island status if supported
+          backgroundManagerRef.current.updateDynamicIslandStatus(
+            processingStep,
+            progressPercent,
+            selectedPlatform
+          );
+        }
       });
 
       try {
@@ -69,7 +86,7 @@ function App() {
       }
     };
     loadFFmpeg();
-  }, []);
+  }, [isProcessing, processingStep, selectedPlatform]);
 
   // Platform-specific optimization strategies
   const platformStrategies = {
