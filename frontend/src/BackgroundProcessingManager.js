@@ -116,8 +116,14 @@ class BackgroundProcessingManager {
   completeProcessing(data) {
     this.isProcessingInBackground = false;
     
+    // Clear keep alive
+    if (this.keepAlive) {
+      clearInterval(this.keepAlive);
+      this.keepAlive = null;
+    }
+    
     // Reset page title
-    this.updatePageTitle('✅ Video Ready - Viral Reshuffler');
+    this.updatePageTitle('✅ Video Ready - AyoRecuts');
     
     // Send completion notification
     this.sendNotification('PROCESSING_COMPLETE', data);
@@ -136,8 +142,14 @@ class BackgroundProcessingManager {
   errorProcessing(error, platform) {
     this.isProcessingInBackground = false;
     
+    // Clear keep alive
+    if (this.keepAlive) {
+      clearInterval(this.keepAlive);
+      this.keepAlive = null;
+    }
+    
     // Update page title
-    this.updatePageTitle('❌ Processing Failed - Viral Reshuffler');
+    this.updatePageTitle('❌ Processing Failed - AyoRecuts');
     
     // Send error notification
     this.sendNotification('PROCESSING_ERROR', {
